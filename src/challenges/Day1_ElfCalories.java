@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Day1 {
+public class Day1_ElfCalories {
     public static void main(String[] args)  {
-        Day1 day1 = new Day1();
+        Day1_ElfCalories day1 = new Day1_ElfCalories();
         System.out.println("Max Calories: " + day1.getMaxCalories());
         System.out.println("Top 3 Calories: " + day1.getSumOfTopCalories(3));
     }
 
     private String fileContents = "";
 
-    public Day1() {
+    public Day1_ElfCalories() {
         String inputFile = "resources\\day1-input.txt";
         try {
             this.fileContents = InputFileReader.readFileAsString(inputFile);
