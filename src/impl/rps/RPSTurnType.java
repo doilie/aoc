@@ -1,12 +1,12 @@
-package rps;
+package impl.rps;
 
-public enum RockPaperScissorsTurn {
+public enum RPSTurnType {
     Rock(1),
     Paper(2),
     Scissors(3);
 
     private final int score;
-    RockPaperScissorsTurn(int score) {
+    RPSTurnType(int score) {
         this.score = score;
     }
 

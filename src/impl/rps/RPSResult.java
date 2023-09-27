@@ -1,13 +1,13 @@
-package rps;
+package impl.rps;
 
-public enum RockPaperScissorsScore {
+public enum RPSResult {
     Win(6),
     Draw(3),
     Lose(0);
 
     private final int score;
 
-    RockPaperScissorsScore(int score) {
+    RPSResult(int score) {
         this.score = score;
     }
 
