@@ -2,6 +2,10 @@ package challenges;
 
 import impl.rope.MoveInstruction;
 import impl.rope.RopeSequence;
+import impl.rope.RopeTail;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Day9_RopeBridge extends Challenge {
     public static void main(String[] args) {
@@ -32,11 +36,21 @@ public class Day9_RopeBridge extends Challenge {
 
     @Override
     public void doOneStarSolution() {
+        RopeTail ropeTail = ropeSequence.addRopeTail("T");
         ropeSequence.applyMoves();
-        System.out.println("Positions visited by tail: " + ropeSequence.countPositionsVisitedByTail());
+        System.out.println("Positions visited by tail: " + ropeSequence.countPositionsVisitedByRopeEnd(ropeTail));
     }
 
     @Override
     public void doTwoStarSolution() {
+        ropeSequence.reset();
+        final int tailCount = 9;
+        List<RopeTail> ropeTailList = new ArrayList<>();
+        for (int i = 1; i <= tailCount; i++) {
+            ropeTailList.add(ropeSequence.addRopeTail(Integer.toString(i)));
+        }
+        RopeTail finalTail = ropeTailList.get(ropeTailList.size() - 1);
+        ropeSequence.applyMoves();
+        System.out.println("Positions visited by last tail: " + ropeSequence.countPositionsVisitedByRopeEnd(finalTail));
     }
 }

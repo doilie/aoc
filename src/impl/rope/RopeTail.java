@@ -1,10 +1,10 @@
 package impl.rope;
 
 public class RopeTail extends RopeEnd {
-    private final RopeHead head;
+    private final RopeEnd head;
 
-    public RopeTail(RopeHead head) {
-        super("T");
+    public RopeTail(String name, RopeEnd head) {
+        super(name);
         this.head = head;
     }
 
@@ -27,10 +27,10 @@ public class RopeTail extends RopeEnd {
                 newColumn++;
             }
             // also move vertically
-            if (rowDiff == -1) {
+            if (rowDiff < 0) {
                 newRow--;
             }
-            else if (rowDiff == 1) {
+            else if (rowDiff > 0) {
                 newRow++;
             }
         }
@@ -44,10 +44,10 @@ public class RopeTail extends RopeEnd {
                 newRow++;
             }
             // also move horizontally
-            if (columnDiff == -1) {
+            if (columnDiff < 0) {
                 newColumn--;
             }
-            else if (columnDiff == 1) {
+            else if (columnDiff > 0) {
                 newColumn++;
             }
         }

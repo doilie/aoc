@@ -5,19 +5,34 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class RopeSequence {
-    private final Hashtable<String, Position> allPositions = new Hashtable<>();
-    private final List<MoveInstruction> moveInstructions;
+    private final List<MoveInstruction> moveInstructions = new ArrayList<>();
     private final RopeHead head = new RopeHead();
-    private final RopeTail tail = new RopeTail(head);
-    private final int startingPositionIdx = 8;
+    private final int startingPositionIdx = 100;
+    private List<RopeTail> ropeTails;
+    private Hashtable<String, Position> allPositions;
 
     public RopeSequence() {
-        moveInstructions = new ArrayList<>();
+        reset();
+    }
+
+    public void reset() {
+        ropeTails = new ArrayList<>();
+        allPositions = new Hashtable<>();
         Position startingPosition = new Position(startingPositionIdx, startingPositionIdx);
         allPositions.put(startingPosition.getName(), startingPosition);
         head.setCurrentPosition(startingPosition);
-        tail.setCurrentPosition(startingPosition);
         startingPosition.setStartingPosition(true);
+    }
+
+    public RopeTail addRopeTail(String name) {
+        RopeTail ropeTail = null;
+        if (name != null) {
+            RopeEnd previousRopeEnd = ropeTails.isEmpty() ? head : ropeTails.get(ropeTails.size() - 1);
+            ropeTail = new RopeTail(name, previousRopeEnd);
+            ropeTail.setCurrentPosition(previousRopeEnd.currentPosition);
+            ropeTails.add(ropeTail);
+        }
+        return ropeTail;
     }
 
     public void addHeadMove(MoveInstruction moveInstruction) {
@@ -32,29 +47,15 @@ public class RopeSequence {
                 head.setCurrentPosition(newHeadPosition);
 //                System.out.print("H " + newHeadPosition.getName());
 
-                Position newTailPosition = tail.move();
-                newTailPosition = addPositionToMap(newTailPosition);
-                tail.setCurrentPosition(newTailPosition);
-//                System.out.println(", T " + newTailPosition.getName());
-//                printCurrentRopeEnds();
+                for (RopeTail tail : ropeTails) {
+                    Position newTailPosition = tail.move();
+                    newTailPosition = addPositionToMap(newTailPosition);
+                    tail.setCurrentPosition(newTailPosition);
+//                    System.out.println(", " + tail.getName() + " " + newTailPosition.getName());
+//                    printCurrentRopeEnds();
+                }
             }
         }
-    }
-
-    public void printPositionsVisitedByHead() {
-        this.printPositionsVisitedByRopeEnd(head);
-    }
-
-    public void printPositionsVisitedByTail() {
-        this.printPositionsVisitedByRopeEnd(tail);
-    }
-
-    public int countPositionsVisitedByHead() {
-        return this.countPositionsVisitedByRopeEnd(head);
-    }
-
-    public int countPositionsVisitedByTail() {
-        return this.countPositionsVisitedByRopeEnd(tail);
     }
 
     private Position addPositionToMap(Position position) {
@@ -66,7 +67,7 @@ public class RopeSequence {
         return newPosition;
     }
 
-    private void printPositionsVisitedByRopeEnd(RopeEnd ropeEnd) {
+    public void printPositionsVisitedByRopeEnd(RopeEnd ropeEnd) {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < this.startingPositionIdx * 2; row++) {
             for (int column = 0; column < this.startingPositionIdx * 2; column++) {
@@ -108,11 +109,18 @@ public class RopeSequence {
                 else if (head.currentPosition == position) {
                     sb.append(head.getName());
                 }
-                else if (tail.currentPosition == position) {
-                    sb.append(tail.getName());
-                }
                 else {
-                    sb.append(".");
+                    boolean tailFound = false;
+                    for (RopeTail ropeTail : ropeTails) {
+                        if (ropeTail.currentPosition == position) {
+                            sb.append(ropeTail.getName());
+                            tailFound = true;
+                            break;
+                        }
+                    }
+                    if (!tailFound) {
+                        sb.append(".");
+                    }
                 }
             }
             sb.append("\n");
@@ -120,7 +128,7 @@ public class RopeSequence {
         System.out.println(sb);
     }
 
-    private int countPositionsVisitedByRopeEnd(RopeEnd ropeEnd) {
+    public int countPositionsVisitedByRopeEnd(RopeEnd ropeEnd) {
         return (int) allPositions.values().stream().filter(position -> position.didRopeEndVisit(ropeEnd)).count();
     }
 
