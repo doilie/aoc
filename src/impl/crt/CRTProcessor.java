@@ -1,4 +1,4 @@
-package impl.cpu;
+package impl.crt;
 
 import java.util.*;
 
@@ -6,11 +6,7 @@ public class CRTProcessor {
     private final List<Integer> cycleStates = new ArrayList<>();
     private final List<String> commandLines = new ArrayList<>();
     private final Stack<Integer> accumulator = new Stack<>();
-    private int x;
-
-    public CRTProcessor() {
-        x = 1;
-    }
+    private int x = 1;
 
     public void addCommandLines(String[] lines) {
         commandLines.addAll(Arrays.asList(lines));
@@ -24,7 +20,7 @@ public class CRTProcessor {
                 x += accValue;
             }
             else if (!commandLines.isEmpty()) {
-                Command command = Command.createCommand(commandLines.remove(0));
+                CRTCommand command = CRTCommand.createCommand(commandLines.remove(0));
                 if (command != null) {
                     command.run(this);
                 }

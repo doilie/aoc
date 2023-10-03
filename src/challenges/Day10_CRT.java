@@ -1,6 +1,6 @@
 package challenges;
 
-import impl.cpu.CRTProcessor;
+import impl.crt.CRTProcessor;
 
 public class Day10_CRT extends Challenge {
     public static void main(String[] args) {

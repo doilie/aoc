@@ -1,26 +1,26 @@
-package impl.cpu;
+package impl.crt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Command {
+public abstract class CRTCommand {
     private final String name;
     private final List<String> args = new ArrayList<>();
 
-    public static Command createCommand(String line) {
+    public static CRTCommand createCommand(String line) {
         String commandName = getCommandName(line);
         if (!commandName.isEmpty()) {
             switch(commandName) {
                 case "noop":
-                    return new Command(line) {
+                    return new CRTCommand(line) {
                         @Override
                         public void run(CRTProcessor c) {
 
                         }
                     };
                 case "addx":
-                    return new Command(line) {
+                    return new CRTCommand(line) {
                         @Override
                         public void run(CRTProcessor c) {
                             if (c != null) {
@@ -44,7 +44,7 @@ public abstract class Command {
         return "";
     }
 
-    private Command(String line) {
+    private CRTCommand(String line) {
         this.name = getCommandName(line);
         if (!this.name.isEmpty()) {
             String[] commandParts = line.split(" ");
