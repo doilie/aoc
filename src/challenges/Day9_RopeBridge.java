@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Day9_RopeBridge extends Challenge {
     public static void main(String[] args) {
-        Day9_RopeBridge day6 = new Day9_RopeBridge();
-        day6.doOneStarSolution();
-        day6.doTwoStarSolution();
+        Day9_RopeBridge day9 = new Day9_RopeBridge();
+        day9.doOneStarSolution();
+        day9.doTwoStarSolution();
     }
 
     private final RopeSequence ropeSequence = new RopeSequence();
