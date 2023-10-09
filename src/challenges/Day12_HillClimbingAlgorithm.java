@@ -1,6 +1,7 @@
 package challenges;
 
-import impl.hill.Graph;
+import impl.graph.Graph;
+import impl.graph.Node;
 
 public class Day12_HillClimbingAlgorithm extends Challenge {
     public static void main(String[] args) {
@@ -24,12 +25,21 @@ public class Day12_HillClimbingAlgorithm extends Challenge {
 
     @Override
     public void doOneStarSolution() {
-        graph.calculateShortestPath();
+        graph.calculateShortestPath(graph.getStartNode());
         System.out.println("Shortest path: " + graph.getEndNode().getDistance());
     }
 
     @Override
     public void doTwoStarSolution() {
+        int shortestPath = Integer.MAX_VALUE;
+        for (Node node : graph.getPossibleStartNodes()) {
+            graph.calculateShortestPath(node);
+            int distance = graph.getEndNode().getDistance();
+            if (distance < shortestPath) {
+                shortestPath = distance;
+            }
+        }
+        System.out.println("Shortest path from any a: " + shortestPath);
     }
 
 }

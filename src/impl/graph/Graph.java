@@ -1,18 +1,18 @@
-package impl.hill;
+package impl.graph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class Graph {
-    private final static String possibleNodeValues = "abcdefghijklmnopqrstuvwxyz";
     private final Hashtable<String, Node> nodes = new Hashtable<>();
+    private final Set<Node> possibleStartNodes = new HashSet<>();
     private Node startNode;
     private Node endNode;
+
     public Graph(String[] lines) {
         for (int row = 0; row < lines.length; row++) {
             String line = lines[row];
@@ -20,16 +20,19 @@ public class Graph {
                 String currNode = Character.toString(line.charAt(col));
                 Node node;
                 if (currNode.equals("S")) {
-                    node = new Node(0, row, col);
+                    node = new Node("a", row, col);
                     startNode = node;
                     nodes.putIfAbsent(node.getName(), node);
                 } else if (currNode.equals("E")) {
-                    node = new Node(possibleNodeValues.length() - 1, row, col);
+                    node = new Node("z", row, col);
                     endNode = node;
                     nodes.putIfAbsent(node.getName(), node);
                 } else {
-                    node = new Node(possibleNodeValues.indexOf(currNode), row, col);
+                    node = new Node(currNode, row, col);
                     nodes.putIfAbsent(node.getName(), node);
+                    if (node.getValue() == 0) {
+                        possibleStartNodes.add(node);
+                    }
                 }
             }
         }
@@ -45,7 +48,7 @@ public class Graph {
                 if (possibleNeighbor != null) {
                     int heightDiff = possibleNeighbor.getValue() - node.getValue();
                     if (heightDiff <= 1) {
-                        node.addDestination(possibleNeighbor, 1);
+                        node.addDestination(possibleNeighbor);
                     }
                 }
             }
@@ -60,25 +63,27 @@ public class Graph {
         return endNode;
     }
 
-    public void calculateShortestPath() {
-        if (startNode != null && endNode != null) {
-            startNode.setDistance(0);
+    public Set<Node> getPossibleStartNodes() {
+        return possibleStartNodes;
+    }
+
+    public void calculateShortestPath(Node node) {
+        nodes.values().forEach(n -> n.setDistance(Integer.MAX_VALUE));
+        if (endNode != null) {
+            node.setDistance(0);
 
             Set<Node> settledNodes = new HashSet<>();
             Set<Node> unsettledNodes = new HashSet<>();
 
-            unsettledNodes.add(startNode);
+            unsettledNodes.add(node);
 
             while (!unsettledNodes.isEmpty()) {
                 Node currentNode = getLowestDistanceNode(unsettledNodes);
                 unsettledNodes.remove(currentNode);
-                for (Map.Entry<Node, Integer> adjacencyPair:
-                        currentNode.getDestinations().entrySet()) {
-                    Node adjacentNode = adjacencyPair.getKey();
-                    Integer edgeWeight = adjacencyPair.getValue();
-                    if (!settledNodes.contains(adjacentNode)) {
-                        calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
-                        unsettledNodes.add(adjacentNode);
+                for (Node destination : currentNode.getDestinations()) {
+                    if (!settledNodes.contains(destination)) {
+                        calculateMinimumDistance(destination, currentNode);
+                        unsettledNodes.add(destination);
                     }
                 }
                 settledNodes.add(currentNode);
@@ -99,10 +104,10 @@ public class Graph {
         return lowestDistanceNode;
     }
 
-    private void calculateMinimumDistance(Node evaluationNode, Integer edgeWeigh, Node sourceNode) {
+    private void calculateMinimumDistance(Node evaluationNode, Node sourceNode) {
         Integer sourceDistance = sourceNode.getDistance();
-        if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
-            evaluationNode.setDistance(sourceDistance + edgeWeigh);
+        if (sourceDistance + 1 < evaluationNode.getDistance()) {
+            evaluationNode.setDistance(sourceDistance + 1);
             LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
