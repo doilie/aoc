@@ -20,12 +20,12 @@ public class Day12_HillClimbingAlgorithm extends Challenge {
     protected void parseFile() {
         String[] lines = this.getFileContents().split("\n");
         graph = new Graph(lines);
-        graph.printPaths(graph.getStartNode());
     }
 
     @Override
     public void doOneStarSolution() {
-
+        graph.calculateShortestPath();
+        System.out.println("Shortest path: " + graph.getEndNode().getDistance());
     }
 
     @Override

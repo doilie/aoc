@@ -3,6 +3,7 @@ package impl.hill;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Node {
@@ -10,8 +11,8 @@ public class Node {
     private final int row;
     private final int col;
     private final Hashtable<Node, Integer> destinations = new Hashtable<>();
-    private Node source;
-    private int distanceFromSource;
+    private List<Node> shortestPath = new LinkedList<>();
+    private Integer distance = Integer.MAX_VALUE;
 
     public Node(int value, int row, int col) {
         this.value = value;
@@ -23,19 +24,11 @@ public class Node {
         return value;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
     public String getName() {
         return row + "," + col;
     }
 
-    public List<String> getPossibleNeighbors() {
+    public List<String> getPossibleNeighborIndices() {
         int nodeToTopIdx = this.row - 1;
         int nodeToBottomIdx = this.row + 1;
         int nodeToLeftIdx = this.col - 1;
@@ -57,26 +50,25 @@ public class Node {
             distanceFromSource = Math.min(distanceFromSource, savedDistanceFromSource);
         }
         this.destinations.put(destinationNode, distanceFromSource);
-        destinationNode.setSource(destinationNode);
     }
 
     public Hashtable<Node, Integer> getDestinations() {
         return destinations;
     }
 
-    public Node getSource() {
-        return source;
+    public List<Node> getShortestPath() {
+        return shortestPath;
     }
 
-    public void setSource(Node source) {
-        this.source = source;
+    public void setShortestPath(List<Node> shortestPath) {
+        this.shortestPath = shortestPath;
     }
 
-    public int getDistanceFromSource() {
-        return distanceFromSource;
+    public Integer getDistance() {
+        return distance;
     }
 
-    public void setDistanceFromSource(int distanceFromSource) {
-        this.distanceFromSource = distanceFromSource;
+    public void setDistance(Integer distance) {
+        this.distance = distance;
     }
 }
