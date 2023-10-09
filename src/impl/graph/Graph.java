@@ -3,7 +3,6 @@ package impl.graph;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -91,7 +90,7 @@ public class Graph {
         }
     }
 
-    private Node getLowestDistanceNode(Set < Node > unsettledNodes) {
+    private Node getLowestDistanceNode(Set<Node> unsettledNodes) {
         Node lowestDistanceNode = null;
         int lowestDistance = Integer.MAX_VALUE;
         for (Node node: unsettledNodes) {
@@ -105,10 +104,10 @@ public class Graph {
     }
 
     private void calculateMinimumDistance(Node evaluationNode, Node sourceNode) {
-        Integer sourceDistance = sourceNode.getDistance();
-        if (sourceDistance + 1 < evaluationNode.getDistance()) {
-            evaluationNode.setDistance(sourceDistance + 1);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+        int newDistance = sourceNode.getDistance() + 1;
+        if (newDistance < evaluationNode.getDistance()) {
+            evaluationNode.setDistance(newDistance);
+            List<Node> shortestPath = new ArrayList<>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
