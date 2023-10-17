@@ -34,6 +34,8 @@ public class Day2_Dive extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        SubmarinePositionAim position = new SubmarinePositionAim();
+        submarineCommandList.performCommands(position);
+        System.out.println("Final horizontal distance * final depth with aim: " + (position.getHorizontalPosition() * position.getDepth()));
     }
 }

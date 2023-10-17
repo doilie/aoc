@@ -1,8 +1,8 @@
 package aoc2021.day2;
 
 public class SubmarinePosition {
-    private int horizontalPosition = 0;
-    private int depth = 0;
+    protected int horizontalPosition = 0;
+    protected int depth = 0;
 
     public void moveForward(int distance) {
         horizontalPosition += distance;
