@@ -4,9 +4,9 @@ import lib.Challenge;
 
 public class Day2_Dive extends Challenge {
     public static void main(String[] args)  {
-        Day2_Dive day1 = new Day2_Dive();
-        day1.doOneStarSolution();
-        day1.doTwoStarSolution();
+        Day2_Dive day2 = new Day2_Dive();
+        day2.doOneStarSolution();
+        day2.doTwoStarSolution();
     }
 
 
