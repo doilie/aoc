@@ -28,26 +28,10 @@ public class PositionMovement {
         KeypadPosition currentPosition = keypad.getCurrentPosition();
         for (PositionMovement.MoveDirection direction : moveDirections) {
             switch(direction) {
-                case Up:
-                    if (currentPosition.canMoveUp(keypad)) {
-                        currentPosition.moveUp();
-                    }
-                    break;
-                case Down:
-                    if (currentPosition.canMoveDown(keypad)) {
-                        currentPosition.moveDown();
-                    }
-                    break;
-                case Left:
-                    if (currentPosition.canMoveLeft(keypad)) {
-                        currentPosition.moveLeft();
-                    }
-                    break;
-                case Right:
-                    if (currentPosition.canMoveRight(keypad)) {
-                        currentPosition.moveRight();
-                    }
-                    break;
+                case Up: currentPosition.moveUp(keypad); break;
+                case Down: currentPosition.moveDown(keypad); break;
+                case Left: currentPosition.moveLeft(keypad); break;
+                case Right: currentPosition.moveRight(keypad); break;
             }
         }
     }

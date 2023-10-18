@@ -13,36 +13,28 @@ public class KeypadPosition {
         return buildName(x, y);
     }
 
-    public void moveUp() {
-        this.y--;
+    public void moveUp(BathroomKeypad keypad) {
+        if (keypad.doesButtonExist(buildName(x, y - 1))) {
+            this.y--;
+        }
     }
 
-    public boolean canMoveUp(BathroomKeypad keypad) {
-        return keypad.doesButtonExist(buildName(x, y - 1));
+    public void moveDown(BathroomKeypad keypad) {
+        if (keypad.doesButtonExist(buildName(x, y + 1))) {
+            this.y++;
+        }
     }
 
-    public void moveDown() {
-        this.y++;
+    public void moveLeft(BathroomKeypad keypad) {
+        if (keypad.doesButtonExist(buildName(x - 1, y))) {
+            this.x--;
+        }
     }
 
-    public boolean canMoveDown(BathroomKeypad keypad) {
-        return keypad.doesButtonExist(buildName(x, y + 1));
-    }
-
-    public void moveLeft() {
-        this.x--;
-    }
-
-    public boolean canMoveLeft(BathroomKeypad keypad) {
-        return keypad.doesButtonExist(buildName(x - 1, y));
-    }
-
-    public void moveRight() {
-        this.x++;
-    }
-
-    public boolean canMoveRight(BathroomKeypad keypad) {
-        return keypad.doesButtonExist(buildName(x + 1, y));
+    public void moveRight(BathroomKeypad keypad) {
+        if (keypad.doesButtonExist(buildName(x + 1, y))) {
+            this.x++;
+        }
     }
 
     public static String buildName(int x, int y) {
