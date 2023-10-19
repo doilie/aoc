@@ -2,7 +2,8 @@ package aoc2022.day15;
 
 import lib.Challenge;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Day15_BeaconExclusion extends Challenge {
@@ -12,33 +13,26 @@ public class Day15_BeaconExclusion extends Challenge {
         day15.doTwoStarSolution();
     }
 
+    private BeaconFinder beaconFinder;
+
     public Day15_BeaconExclusion() {
         super("2022/day15-input.txt");
         parseFile();
     }
 
-    private final List<Sensor> sensorList = new ArrayList<>();
-    private final Hashtable<Integer, List<Range>> sensorRanges = new Hashtable<>();
-
     @Override
     protected void parseFile() {
+        List<Sensor> sensorList = new ArrayList<>();
         String[] lines = this.getFileContents().split("\n");
         for (String line : lines) {
             sensorList.add(new Sensor(line));
         }
-        sensorRanges.putAll(getSensorRanges());
+        beaconFinder = new BeaconFinder(sensorList);
     }
 
     @Override
     public void doOneStarSolution() {
-        List<Range> rangesToCombine = sensorRanges.get(2000000);
-        Collections.sort(rangesToCombine);
-        for (int i = 0; i < rangesToCombine.size() - 1; i++) {
-            Range range = rangesToCombine.get(i).combineRange(rangesToCombine.get(i + 1));
-            if (range != null) {
-                rangesToCombine.set(i + 1, range);
-            }
-        }
+        List<Range> rangesToCombine = beaconFinder.getSensorRangeInRow(2000000);
         Range lastRange = rangesToCombine.get(rangesToCombine.size() - 1);
         int positionsWithNoBeacon = lastRange.getEnd() - lastRange.getStart();
         System.out.println("Positions that cannot contain a beacon in y=2000000: " + positionsWithNoBeacon);
@@ -46,23 +40,13 @@ public class Day15_BeaconExclusion extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-        List<Integer> possibleRows = sensorRanges.keySet().stream().filter(x -> x >= 0 && x <= 4000000).collect(Collectors.toList());
+        List<Integer> possibleRows = beaconFinder.getSensorRanges().keySet().stream().filter(x -> x >= 0 && x <= 4000000).collect(Collectors.toList());
         Position foundPosition = null;
         for (int possibleRow : possibleRows) {
-            List<Range> rangesToCheck = sensorRanges.get(possibleRow);
-            Collections.sort(rangesToCheck);
-            for (int i = 0; i < rangesToCheck.size() - 1; i++) {
-                Range range = rangesToCheck.get(i).combineRange(rangesToCheck.get(i + 1));
-                if (range != null) {
-                    rangesToCheck.set(i + 1, range);
-                }
-                else {
-                    foundPosition = new Position(rangesToCheck.get(i).getEnd() + 1, possibleRow);
-                    System.out.println("Distress beacon: x = " + foundPosition.getX() + ", y = " + foundPosition.getY());
-                    break;
-                }
-            }
-            if (foundPosition != null) {
+            List<Range> rangesToCheck = beaconFinder.getSensorRanges().get(possibleRow);
+            if (rangesToCheck.size() > 1) {
+                foundPosition = new Position(rangesToCheck.get(0).getEnd() + 1, possibleRow);
+                System.out.println("Distress beacon: x = " + foundPosition.getX() + ", y = " + foundPosition.getY());
                 break;
             }
         }
@@ -70,22 +54,5 @@ public class Day15_BeaconExclusion extends Challenge {
             long tuningFrequency = (foundPosition.getX() * 4000000L) + foundPosition.getY();
             System.out.println("Tuning frequency of distress beacon: " + tuningFrequency);
         }
-    }
-
-    private Hashtable<Integer, List<Range>> getSensorRanges() {
-        Hashtable<Integer, List<Range>> sensorRanges = new Hashtable<>();
-        for (Sensor sensor : sensorList) {
-            Hashtable<Integer, Range> sensorRange = sensor.getSensorRange();
-            Set<Integer> rows = sensorRange.keySet();
-            for (int row : rows) {
-                List<Range> rowRangeList = sensorRanges.get(row);
-                if (rowRangeList == null) {
-                    rowRangeList = new ArrayList<>();
-                }
-                rowRangeList.add(sensorRange.get(row));
-                sensorRanges.put(row, rowRangeList);
-            }
-        }
-        return sensorRanges;
     }
 }
