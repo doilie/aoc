@@ -7,7 +7,15 @@ public class Beacon {
         position = Position.parseLine(input);
     }
 
+    public Beacon(Position position) {
+        this.position = position;
+    }
+
     public Position getPosition() {
         return position;
+    }
+
+    public long getTuningFrequency() {
+        return (position.getX() * 4000000L) + position.getY();
     }
 }
