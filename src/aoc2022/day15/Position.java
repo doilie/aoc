@@ -9,10 +9,6 @@ public class Position {
         this.y = y;
     }
 
-    public static String buildName(int x, int y) {
-        return x + "," + y;
-    }
-
     public static Position parseLine(String input) {
         String[] parts = input.split(" ");
         int x = 0;
@@ -41,9 +37,4 @@ public class Position {
     public int getY() {
         return y;
     }
-
-    public String getName() {
-        return buildName(x, y);
-    }
-
 }

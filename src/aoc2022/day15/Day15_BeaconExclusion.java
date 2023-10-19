@@ -34,7 +34,7 @@ public class Day15_BeaconExclusion extends Challenge {
         List<Range> rangesToCombine = beaconFinder.getSensorRangeInRow(2000000);
         Range lastRange = rangesToCombine.get(rangesToCombine.size() - 1);
         int positionsWithNoBeacon = lastRange.getEnd() - lastRange.getStart();
-        System.out.println("Positions that cannot contain a beacon in y=2000000: " + positionsWithNoBeacon);
+        System.out.println("Positions that cannot contain a beacon in y = 2000000: " + positionsWithNoBeacon);
     }
 
     @Override
