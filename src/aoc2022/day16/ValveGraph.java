@@ -1,28 +1,75 @@
 package aoc2022.day16;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ValveGraph {
     private final Hashtable<String, Valve> valves = new Hashtable<>();
-    private final Hashtable<String, Integer> pressurePaths = new Hashtable<>();
-
+    private final Hashtable<List<String>, Integer> pressurePathList = new Hashtable<>();
     public void addValve(Valve valve) {
         valves.put(valve.getName(), valve);
     }
 
-    public Map.Entry<String, Integer> getMaxPressureToRelease(String valveName, int minutes) {
+    public void initializePressurePaths() {
         calculateValveDistances();
-        computePressurePerPath(valveName, minutes, new ArrayList<>());
+    }
+
+    public Map.Entry<List<String>, Integer> getMaxPressurePath(int minutes) {
+        final String StartValve = "AA";
+        pressurePathList.clear();
+        computePressurePerPath(StartValve, minutes, new ArrayList<>());
 
         int max = 0;
-        Map.Entry<String, Integer> foundPath = null;
-        for (Map.Entry<String, Integer> path : pressurePaths.entrySet()) {
+        Map.Entry<List<String>, Integer> foundPathList = null;
+        for (Map.Entry<List<String>, Integer> path : pressurePathList.entrySet()) {
             if (path.getValue() > max) {
                 max = path.getValue();
-                foundPath = path;
+                foundPathList = path;
             }
         }
-        return foundPath;
+        return foundPathList;
+    }
+
+    public Hashtable<List<String>, Integer> getMaxPressureToReleaseWithElephant(int minutes) {
+        Hashtable<List<String>, Integer> combinedPaths = new Hashtable<>();
+
+        // highest pressure path can be handled by human
+        Map.Entry<List<String>, Integer> maxPressureByHuman = getMaxPressurePath(minutes);
+        combinedPaths.put(maxPressureByHuman.getKey(), maxPressureByHuman.getValue());
+
+        // find path that complements the human path with maximum pressure - sort the list by longest path to get higher values first
+        List<String> humanPath = maxPressureByHuman.getKey();
+        List<List<String>> pathsSorted = pressurePathList.keySet().stream().sorted((o1, o2) -> o2.size() - o1.size()).collect(Collectors.toList());
+        int elephantPressure = 0;
+        int maxPressure = 0;
+        List<String> elephantPath = null;
+        for (List<String> possibleElephantPath : pathsSorted) {
+            if (humanPath == possibleElephantPath) {
+                continue;
+            }
+            if (checkDisjoint(maxPressureByHuman.getKey(), possibleElephantPath)) {
+                int totalPressure = pressurePathList.get(humanPath) + pressurePathList.get(possibleElephantPath);
+                if (totalPressure > maxPressure) {
+                    maxPressure = totalPressure;
+                    elephantPath = possibleElephantPath;
+                    elephantPressure = pressurePathList.get(possibleElephantPath);
+                }
+            }
+        }
+
+        if (elephantPath != null) {
+            combinedPaths.put(elephantPath, elephantPressure);
+        }
+
+        return combinedPaths;
+    }
+
+    private static boolean checkDisjoint(List<String> path1, List<String> path2){
+        Set<String> combined = new HashSet<>();
+        combined.addAll(path1);
+        combined.addAll(path2);
+
+        return combined.size() == path1.size() + path2.size();
     }
 
     private void computePressurePerPath(String valveName, int minutes, List<String> openedValves) {
@@ -32,16 +79,14 @@ public class ValveGraph {
             Valve destValve = valves.get(destValveStr);
             int tempMinutes = minutes - valve.getValveDistances().get(destValveStr) - 1;
             if (tempMinutes > 0 && !openedValves.contains(destValveStr)) {
-                String pathKey = String.join(",", openedValves);
                 int cumulativePressure = 0;
-                if (!openedValves.isEmpty() && pressurePaths.get(pathKey) != null) {
-                    cumulativePressure = pressurePaths.get(pathKey);
+                if (!openedValves.isEmpty() && pressurePathList.get(openedValves) != null) {
+                    cumulativePressure = pressurePathList.get(openedValves);
                 }
                 List<String> openedValvesCopy = new ArrayList<>(openedValves);
                 openedValvesCopy.add(destValveStr);
-                pathKey = String.join(",", openedValvesCopy);
                 int tempPressure = tempMinutes * destValve.getRate();
-                pressurePaths.put(pathKey, cumulativePressure + tempPressure);
+                pressurePathList.put(openedValvesCopy, cumulativePressure + tempPressure);
                 computePressurePerPath(destValveStr, tempMinutes, openedValvesCopy);
             }
         }

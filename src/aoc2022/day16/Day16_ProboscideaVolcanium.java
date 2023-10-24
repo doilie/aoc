@@ -2,6 +2,8 @@ package aoc2022.day16;
 
 import lib.Challenge;
 
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public class Day16_ProboscideaVolcanium extends Challenge {
@@ -24,16 +26,25 @@ public class Day16_ProboscideaVolcanium extends Challenge {
         for (String line : lines) {
             valveGraph.addValve(new Valve(line));
         }
+        valveGraph.initializePressurePaths();
     }
 
     @Override
     public void doOneStarSolution() {
-        Map.Entry<String, Integer> maxPressure = valveGraph.getMaxPressureToRelease("AA", 30);
-        System.out.println(maxPressure.getKey() + ": " + maxPressure.getValue());
+        Map.Entry<List<String>, Integer> maxPressureHumanPath = valveGraph.getMaxPressurePath(30);
+        System.out.println("Max pressure path and value (human only): " + maxPressureHumanPath.getKey() + " - " + maxPressureHumanPath.getValue());
     }
 
     @Override
     public void doTwoStarSolution() {
+        Hashtable<List<String>, Integer> maxPressureCollaborativePath = valveGraph.getMaxPressureToReleaseWithElephant(26);
+        int totalPressure = 0;
+        int count = 1;
+        for (Map.Entry<List<String>, Integer> pressurePath : maxPressureCollaborativePath.entrySet()) {
+            System.out.println("Max pressure path and value (" + count++ + "): " + pressurePath.getKey() + " - " + pressurePath.getValue());
+            totalPressure += pressurePath.getValue();
+        }
+        System.out.println("Total pressure with elephant: " + totalPressure);
 
     }
 }
