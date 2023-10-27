@@ -72,6 +72,14 @@ public class Rock {
         return nextRock;
     }
 
+    public static int getRockCounter() {
+        return rockCounter;
+    }
+
+    public static RockType[] getRockTypeOrder() {
+        return rockTypeOrder;
+    }
+
     private final Set<Coordinate> coordinates;
 
     public Rock(Set<Coordinate> coordinates) {

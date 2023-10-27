@@ -33,15 +33,16 @@ public class Day17_PyroclasticFlow extends Challenge {
         final int max = 2022;
         for (int i = 0; i < max; i++) {
             chamber.simulateRockFall();
-            if (i >= max - 10) {
-                System.out.println(chamber.getMaxHeight() + 1);
-            }
         }
         chamber.printChamber();
-        System.out.println("Tower of rocks height: " + (chamber.getMaxHeight() + 1));
+        System.out.println("Tower of rocks height (2022): " + (chamber.getMaxHeight() + 1));
     }
 
     @Override
     public void doTwoStarSolution() {
+        while (!chamber.cycleFound()) {
+            chamber.simulateRockFall();
+        }
+        System.out.println("Tower of rocks height (1 trillion): " + (chamber.getHeightAtRock(1000000000000L)));
     }
 }
