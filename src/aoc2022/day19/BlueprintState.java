@@ -77,7 +77,7 @@ public class BlueprintState implements Comparable<BlueprintState> {
                 geodeRobots + robot.getGeodeRobotsBuilt());
     }
 
-    public boolean isBetterThan(int best) {
+    public boolean hasPotentialToBeBetter(int best) {
         int potentialProduction = 0;
         for (int i = 0; i < minutes; i++) {
             potentialProduction += i + geodeRobots;

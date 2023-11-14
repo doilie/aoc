@@ -19,7 +19,7 @@ public class BlueprintFactory {
 
         while (!queue.isEmpty()) {
             BlueprintState state = queue.poll();
-            if (state.isBetterThan(currentBest)) {
+            if (state.hasPotentialToBeBetter(currentBest)) {
                 queue.addAll(state.getNextSensibleStates(blueprint));
             }
             currentBest = Math.max(currentBest, state.getGeode() + state.getGeodeRobots() * (state.getMinutes() - 1));
