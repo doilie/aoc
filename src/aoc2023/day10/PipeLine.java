@@ -1,13 +1,13 @@
 package aoc2023.day10;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class PipeLine {
     private final Hashtable<String, Pipe> pipes = new Hashtable<>();
     private Pipe startPipe;
+    private final List<Pipe> pipePath = new ArrayList<>();
+    private final List<Pipe> areaInsidePipePath = new ArrayList<>();
 
     public PipeLine(String[] lines) {
         for (int y = 0; y < lines.length; y++) {
@@ -23,7 +23,7 @@ public class PipeLine {
         }
     }
 
-    public List<Path> getPaths() {
+    public List<Pipe> getPipePath() {
         List<Path> paths = initializePaths();
 
         if (paths.size() != 2) {
@@ -37,9 +37,75 @@ public class PipeLine {
             moveToNextPipe(path2);
         } while(path1.getCurrentPipe() != path2.getCurrentPipe());
 
-        return paths;
+        // collect to 1 path
+        pipePath.addAll(path1.getPipes());
+        Collections.reverse(path2.getPipes());
+        pipePath.addAll(path2.getPipes().subList(1, path2.getPipes().size() - 1));
+
+        return pipePath;
     }
 
+    public List<Pipe> getAreaInsidePipePath() {
+        // hint from here: https://www.reddit.com/r/adventofcode/comments/18fgddy/2023_day_10_part_2_using_a_rendering_algorithm_to/
+        int maxX = pipes.values().stream().mapToInt(Pipe::x).max().orElse(0);
+        int maxY = pipes.values().stream().mapToInt(Pipe::y).max().orElse(0);
+
+        String previousCurve = "";
+
+        for (int y = 0; y < maxY; y++) {
+            boolean isInside = false;
+            for (int x = 0; x < maxX; x++) {
+                Pipe currPipe = pipes.get(Pipe.buildRowColKey(x, y));
+                if (pipePath.contains(currPipe)) {
+                    switch (currPipe.value()) {
+                        case "F", "L" -> previousCurve = currPipe.value();
+                        case "|" -> isInside = !isInside;
+                        case "7" -> {
+                            if (previousCurve.equals("F")) {
+                                previousCurve = "";
+                            } else if (previousCurve.equals("L")) {
+                                isInside = !isInside;
+                            }
+                        }
+                        case "J" -> {
+                            if (previousCurve.equals("L")) {
+                                previousCurve = "";
+                            } else if (previousCurve.equals("F")) {
+                                isInside = !isInside;
+                            }
+                        }
+                    }
+                }
+
+                if (!pipePath.contains(currPipe) && isInside) {
+                    areaInsidePipePath.add(currPipe);
+                }
+            }
+        }
+
+        return areaInsidePipePath;
+    }
+
+    public void printPath() {
+        int maxX = pipes.values().stream().mapToInt(Pipe::x).max().orElse(0);
+        int maxY = pipes.values().stream().mapToInt(Pipe::y).max().orElse(0);
+
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
+                Pipe pipe = pipes.get(Pipe.buildRowColKey(x, y));
+                if (pipePath.contains(pipe)) {
+                    System.out.print(pipe.value());
+                }
+                else if (areaInsidePipePath.contains(pipe)) {
+                    System.out.print("I");
+                }
+                else {
+                    System.out.print("O");
+                }
+            }
+            System.out.println();
+        }
+    }
     private void moveToNextPipe(Path path) {
         String nextLocation = path.getNextPipeLocation();
         Pipe nextPipe = pipes.get(nextLocation);

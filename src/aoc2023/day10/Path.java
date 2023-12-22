@@ -1,8 +1,6 @@
 package aoc2023.day10;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Path {
     public enum Direction {
@@ -50,7 +48,7 @@ public class Path {
         return new Path(startPipe, direction);
     }
 
-    private static HashMap<String, Direction> getReferenceDirections(Direction direction) {
+    public static HashMap<String, Direction> getReferenceDirections(Direction direction) {
         return switch(direction) {
             case Left -> directionsFromMovingLeft;
             case Right -> directionsFromMovingRight;
@@ -74,6 +72,10 @@ public class Path {
 
     public List<Pipe> getPipes() {
         return pipes;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public static String calculateNextPipeLocation(int x, int y, Direction direction) {

@@ -16,24 +16,24 @@ public class Day10_PipeMaze extends Challenge {
         this.parseFile();
     }
 
-    private PipeLine graph;
+    private PipeLine pipeLine;
 
     @Override
     public void parseFile() {
         String[] lines = this.getFileContents().split("\n");
-        graph = new PipeLine(lines);
+        pipeLine = new PipeLine(lines);
     }
 
     @Override
     public void doOneStarSolution() {
-        List<Path> paths = graph.getPaths();
-        if (paths != null && paths.size() == 2) {
-            System.out.println("Farthest distance from starting position: " + (paths.get(0).getPipes().size() - 1));
-        }
+        List<Pipe> pipePath = pipeLine.getPipePath();
+        System.out.println("Farthest distance from starting position: " + (pipePath.size() / 2));
     }
 
     @Override
     public void doTwoStarSolution() {
+        List<Pipe> areaInsidePipePath = pipeLine.getAreaInsidePipePath();
+        System.out.println("Area inside pipe path: " + areaInsidePipePath.size());
 
     }
 }
