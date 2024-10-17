@@ -27,6 +27,8 @@ public class Day3_SpiralMemory extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        SpiralStepsRebuild spiralStepsRebuild = new SpiralStepsRebuild(inputValue);
+        spiralStepsRebuild.buildSpiral();
+        System.out.println("Steps needed on rebuild: " + spiralStepsRebuild.getLastValue());
     }
 }
