@@ -1,8 +1,6 @@
 package aoc2017.day3;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SpiralStepsRebuild {
     private int x = 0;
@@ -55,7 +53,7 @@ public class SpiralStepsRebuild {
         return positionValueMap.get(buildPosition(x, y));
     }
 
-    private Set<String> getAdjacentPositions()
+    private Collection<String> getAdjacentPositions()
     {
         return Set.of(
                 buildPosition(x + 1, y),
@@ -70,17 +68,11 @@ public class SpiralStepsRebuild {
 
     private long getSumOfAdjacentPositions()
     {
-        long sum = 0;
-        Set<String> positions = getAdjacentPositions();
-        for (String position : positions)
-        {
-            Long value = positionValueMap.get(position);
-            if (value != null)
-            {
-                sum += value;
-            }
-        }
-        return sum;
+        return getAdjacentPositions().stream()
+                .map(positionValueMap::get)
+                .filter(Objects::nonNull)
+                .mapToLong(Long::longValue)
+                .sum();
     }
 
     private static String buildPosition(int x, int y)
