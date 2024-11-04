@@ -33,4 +33,14 @@ class FabricTest {
         f.addElfOwnership(new ElfFabricOwnership("#3 @ 5,5: 2x2"));
         assertEquals(4, f.countFabricPositionsWithOverlap());
     }
+
+    @Test
+    void getSoleOwnerOverlap()
+    {
+        Fabric f = new Fabric();
+        f.addElfOwnership(new ElfFabricOwnership("#1 @ 1,3: 4x4"));
+        f.addElfOwnership(new ElfFabricOwnership("#2 @ 3,1: 4x4"));
+        f.addElfOwnership(new ElfFabricOwnership("#3 @ 5,5: 2x2"));
+        assertEquals(3, f.getSoleOwnerOverlap());
+    }
 }

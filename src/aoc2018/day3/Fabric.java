@@ -1,9 +1,6 @@
 package aoc2018.day3;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Fabric {
     private static String getPosition(int x, int y)
@@ -11,6 +8,7 @@ public class Fabric {
         return x + "," + y;
     }
     private final Map<String, List<Integer>> fabricSquareArea = new HashMap<>();
+    private final Set<Integer> elvesWithSharedArea = new HashSet<>();
 
     public void addElfOwnership(ElfFabricOwnership efo)
     {
@@ -37,6 +35,19 @@ public class Fabric {
         return fabricSquareArea.values().stream().filter(x -> x.size() > 1).count();
     }
 
+    public int getSoleOwnerOverlap()
+    {
+        List<Integer> sortedElves = elvesWithSharedArea.stream().sorted().toList();
+        for (int i = 0; i < sortedElves.size(); i++)
+        {
+            if (i + 1 != sortedElves.get(i))
+            {
+                return i + 1;
+            }
+        }
+        return sortedElves.size() + 1;
+    }
+
     private void addElfInPosition(int x, int y, int elfId)
     {
         String position = getPosition(x, y);
@@ -45,6 +56,10 @@ public class Fabric {
         {
             elfOwners = new ArrayList<>();
             fabricSquareArea.put(position, elfOwners);
+        }
+        else {
+            elvesWithSharedArea.addAll(elfOwners);
+            elvesWithSharedArea.add(elfId);
         }
         elfOwners.add(elfId);
     }
