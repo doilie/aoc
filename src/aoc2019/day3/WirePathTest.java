@@ -81,17 +81,9 @@ class WirePathTest
     @Test
     void getPositionsWithIntersection()
     {
-        WirePath wg1 = new WirePath();
-        wg1.move("R8");
-        wg1.move("U5");
-        wg1.move("L5");
-        wg1.move("D3");
-        WirePath wg2 = new WirePath();
-        wg2.move("U7");
-        wg2.move("R6");
-        wg2.move("D4");
-        wg2.move("L4");
-        Set<String> positionsWithIntersection = WirePath.getPositionsWithIntersection(List.of(wg1, wg2));
+        String wire1 = "R8,U5,L5,D3";
+        String wire2 = "U7,R6,D4,L4";
+        Set<String> positionsWithIntersection = WirePath.getPositionsWithIntersection(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2)));
         assertEquals(2, positionsWithIntersection.size());
         assertTrue(positionsWithIntersection.contains("3,-3"));
         assertTrue(positionsWithIntersection.contains("6,-5"));
@@ -100,16 +92,82 @@ class WirePathTest
     @Test
     void getClosestDistanceFromCentralPort()
     {
-        WirePath wg1 = new WirePath();
-        wg1.move("R8");
-        wg1.move("U5");
-        wg1.move("L5");
-        wg1.move("D3");
-        WirePath wg2 = new WirePath();
-        wg2.move("U7");
-        wg2.move("R6");
-        wg2.move("D4");
-        wg2.move("L4");
-        assertEquals(6, WirePath.getClosestDistanceFromCentralPort(List.of(wg1, wg2)));
+        String wire1 = "R8,U5,L5,D3";
+        String wire2 = "U7,R6,D4,L4";
+        assertEquals(6, WirePath.getClosestDistanceFromCentralPort(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
+    }
+
+    @Test
+    void getClosestDistanceFromCentralPortCase1()
+    {
+        String wire1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72";
+        String wire2 = "U62,R66,U55,R34,D71,R55,D58,R83";
+        assertEquals(159, WirePath.getClosestDistanceFromCentralPort(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
+    }
+
+    @Test
+    void getClosestDistanceFromCentralPortCase2()
+    {
+        String wire1 = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51";
+        String wire2 = "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
+        assertEquals(135, WirePath.getClosestDistanceFromCentralPort(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
+    }
+
+    @Test
+    void getNumberOfStepsToPosition1()
+    {
+        String wire = "R8,U5,L5,D3";
+        WirePath wp = WirePath.createFromInstructions(wire);
+        assertEquals(20, wp.getNumberOfStepsToPosition("3,-3"));
+    }
+
+
+    @Test
+    void getNumberOfStepsToPosition2()
+    {
+        String wire = "U7,R6,D4,L4";
+        WirePath wp = WirePath.createFromInstructions(wire);
+        assertEquals(20, wp.getNumberOfStepsToPosition("3,-3"));
+    }
+
+    @Test
+    void getNumberOfStepsToPosition1a()
+    {
+        String wire = "R8,U5,L5,D3";
+        WirePath wp = WirePath.createFromInstructions(wire);
+        assertEquals(15, wp.getNumberOfStepsToPosition("6,-5"));
+    }
+
+
+    @Test
+    void getNumberOfStepsToPosition2b()
+    {
+        String wire = "U7,R6,D4,L4";
+        WirePath wp = WirePath.createFromInstructions(wire);
+        assertEquals(15, wp.getNumberOfStepsToPosition("6,-5"));
+    }
+
+    @Test
+    void getFewestStepsToIntersection1()
+    {
+        String wire1 = "R8,U5,L5,D3";
+        String wire2 = "U7,R6,D4,L4";
+        assertEquals(30, WirePath.getFewestStepsToIntersection(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
+    }
+
+    @Test
+    void getFewestStepsToIntersection2()
+    {
+        String wire1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72";
+        String wire2 = "U62,R66,U55,R34,D71,R55,D58,R83";
+        assertEquals(610, WirePath.getFewestStepsToIntersection(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
+    }
+
+    @Test
+    void getFewestStepsToIntersection3()
+    {
+        String wire1 = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51";
+        String wire2 = "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
+        assertEquals(410, WirePath.getFewestStepsToIntersection(List.of(WirePath.createFromInstructions(wire1), WirePath.createFromInstructions(wire2))));
     }
 }

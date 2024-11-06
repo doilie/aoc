@@ -23,12 +23,7 @@ public class Day3_CrossedWires extends Challenge {
     protected void parseFile() {
         String[] lines = this.getFileContents().split("\\n");
         for (String line : lines) {
-            WirePath wp = new WirePath();
-            String[] instructions = line.split(",");
-            for (String instruction : instructions) {
-                wp.move(instruction);
-            }
-            wirePaths.add(wp);
+            wirePaths.add(WirePath.createFromInstructions(line));
         }
     }
 
@@ -39,6 +34,6 @@ public class Day3_CrossedWires extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-//        System.out.println("100 * noun + verb with value at position 0 = 19690720: " + ((100 * noun) + verb));
+        System.out.println("Fewest combined steps from central port to intersection: " + WirePath.getFewestStepsToIntersection(wirePaths));
     }
 }

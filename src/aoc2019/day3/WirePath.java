@@ -20,6 +20,7 @@ public class WirePath {
     private int currentX;
     private int currentY;
     private final Set<String> visitedPositions = new HashSet<>();
+    private final List<String> visitedPositionsList = new ArrayList<>();
 
     public void move(String instruction) {
         if (instruction.length() >= 2) {
@@ -63,9 +64,26 @@ public class WirePath {
         return currentY;
     }
 
+    public int getNumberOfStepsToPosition(String position)
+    {
+        return visitedPositionsList.indexOf(position);
+    }
+
     private void moveToPosition(int x, int y) {
         String position = getPosition(x, y);
         visitedPositions.add(position);
+        visitedPositionsList.add(position); // for steps
+    }
+
+    public static WirePath createFromInstructions(String instructions)
+    {
+        String[] instructionsArr = instructions.split(",");
+        WirePath wg = new WirePath();
+        for (String s : instructionsArr)
+        {
+            wg.move(s);
+        }
+        return wg;
     }
 
     public static Set<String> getPositionsWithIntersection(List<WirePath> wirePaths)
@@ -86,12 +104,27 @@ public class WirePath {
 
     public static int getClosestDistanceFromCentralPort(List<WirePath> wirePaths)
     {
-        Set<String> positionsWithIntersection = getPositionsWithIntersection(wirePaths);
-        OptionalInt result = positionsWithIntersection.stream().map(WirePath::getManhattanDistance).mapToInt(a -> a).min();
+        OptionalInt result = getPositionsWithIntersection(wirePaths).stream().map(WirePath::getManhattanDistance).mapToInt(a -> a).min();
         if (result.isPresent())
         {
             return result.getAsInt();
         }
         return 0;
+    }
+
+    public static int getFewestStepsToIntersection(List<WirePath> wirePaths)
+    {
+        Set<String> positionsWithIntersection = getPositionsWithIntersection(wirePaths);
+        int minSum = Integer.MAX_VALUE;
+        for (String p: positionsWithIntersection)
+        {
+            int currSum = 0;
+            for (WirePath wp : wirePaths)
+            {
+                currSum += wp.getNumberOfStepsToPosition(p);
+            }
+            minSum = Math.min(minSum, currSum);
+        }
+        return minSum;
     }
 }
