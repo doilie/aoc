@@ -32,4 +32,18 @@ class BinaryDiagnosticTest {
         BinaryDiagnostic bd = new BinaryDiagnostic(TEST_INPUT);
         assertEquals("01001", bd.getEpsilonRate());
     }
+
+    @Test
+    void getOxygenGeneratorRating()
+    {
+        BinaryDiagnostic bd = new BinaryDiagnostic(TEST_INPUT);
+        assertEquals("10111", bd.getOxygenGeneratorRating());
+    }
+
+    @Test
+    void getCO2ScrubberRating()
+    {
+        BinaryDiagnostic bd = new BinaryDiagnostic(TEST_INPUT);
+        assertEquals("01010", bd.getCO2ScrubberRating());
+    }
 }

@@ -29,6 +29,9 @@ public class Day3_BinaryDiagnostic extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-//        System.out.println("Final horizontal distance * final depth with aim: " + (position.getHorizontalPosition() * position.getDepth()));
+        BinaryDiagnostic bd = new BinaryDiagnostic(this.getFileContents());
+        BinaryNumber oxygenGeneratorRating = new BinaryNumber(bd.getOxygenGeneratorRating());
+        BinaryNumber co2ScrubberRating = new BinaryNumber(bd.getCO2ScrubberRating());
+        System.out.println("Life support rating of submarine: " + (oxygenGeneratorRating.convertToDecimal() * co2ScrubberRating.convertToDecimal()));
     }
 }

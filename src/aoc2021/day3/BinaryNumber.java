@@ -44,7 +44,7 @@ public class BinaryNumber {
 
     public int getLeastCommonBit()
     {
-        return numberOfZeroes < numberOfOnes ? 0 : 1;
+        return numberOfOnes < numberOfZeroes ? 1 : 0;
     }
 
     public long convertToDecimal()
