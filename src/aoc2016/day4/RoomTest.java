@@ -96,4 +96,11 @@ class RoomTest {
         );
         assertEquals(1514, puzzleSampleList.stream().filter(Room::isRealRoom).map(Room::getSectorId).mapToInt(Integer::intValue).sum());
     }
+
+    @Test
+    void decryptName()
+    {
+        Room room = new Room("qzmt-zixmtkozy-ivhz-343[abcde]");
+        assertEquals("very encrypted name", room.decryptName());
+    }
 }

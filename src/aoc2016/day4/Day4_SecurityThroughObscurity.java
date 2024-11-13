@@ -34,6 +34,13 @@ public class Day4_SecurityThroughObscurity extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-//        System.out.println("Number of possible triangles from columns: " + triangleCheckerList.stream().filter(TriangleChecker::isValid).count());
+        for (Room room : rooms)
+        {
+            String decryptedName = room.decryptName();
+            if (decryptedName.equals("northpole object storage"))
+            {
+                System.out.println("Sector id of room where North Pole objects are stored: " + room.getSectorId());
+            }
+        }
     }
 }

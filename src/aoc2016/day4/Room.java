@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Room
 {
+    private static final String LETTERS = "abcdefghijklmnopqrstuvwxyz";
     private String encryptedName;
     private int sectorId;
     private String checkSum;
@@ -53,6 +54,27 @@ public class Room
 
     public String getCheckSum() {
         return checkSum;
+    }
+
+    public String decryptName()
+    {
+        StringBuilder decryptedName = new StringBuilder();
+        for (int i = 0; i < encryptedName.length(); i++)
+        {
+            decryptedName.append(getDecryptedLetter(encryptedName.charAt(i)));
+        }
+        return decryptedName.toString();
+    }
+
+    private char getDecryptedLetter(char encryptedLetter)
+    {
+        int encryptedLetterIdx = LETTERS.indexOf(encryptedLetter);
+        if (encryptedLetterIdx == -1)  // -
+        {
+            return ' ';
+        }
+        int decryptedLetterIdx = (encryptedLetterIdx + sectorId) % LETTERS.length();
+        return LETTERS.charAt(decryptedLetterIdx);
     }
 
     public Map<Character, Integer> getEncryptedNameLetterCount()
