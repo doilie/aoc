@@ -12,13 +12,13 @@ public class GuardRecordAnalyzer
         return guard + "_" + minute;
     }
 
-    private static int getGuardIdFromKey(String key)
+    public static int getGuardIdFromKey(String key)
     {
         String[] keyParts = key.split("_");
         return Integer.parseInt(keyParts[0]);
     }
 
-    private static int getMinuteFromKey(String key)
+    public static int getMinuteFromKey(String key)
     {
         String[] keyParts = key.split("_");
         return Integer.parseInt(keyParts[1]);
@@ -91,5 +91,20 @@ public class GuardRecordAnalyzer
             }
         }
         return minuteMostlySlept;
+    }
+
+    public String getGuardKeyWithMostSleep()
+    {
+        String key = "";
+        int maxSleep = 0;
+        for (Map.Entry<String, Integer> entry : guardSleepMinutesPerDay.entrySet())
+        {
+            if (entry.getValue() > maxSleep)
+            {
+                maxSleep = entry.getValue();
+                key = entry.getKey();
+            }
+        }
+        return key;
     }
 }

@@ -44,6 +44,7 @@ public class Day4_ReposeRecord extends Challenge {
     @Override
     public void doTwoStarSolution()
     {
-//        System.out.println("Sole owner elf: " + f.getSoleOwnerOverlap());
+        String guardKey = guardRecordAnalyzer.getGuardKeyWithMostSleep();
+        System.out.println("Product of id of guard and the minute he slept most: " + GuardRecordAnalyzer.getGuardIdFromKey(guardKey) * GuardRecordAnalyzer.getMinuteFromKey(guardKey));
     }
 }

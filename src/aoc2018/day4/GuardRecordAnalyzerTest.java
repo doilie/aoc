@@ -53,4 +53,19 @@ class GuardRecordAnalyzerTest {
         GuardRecordAnalyzer recordAnalyzer = createTestObject();
         assertEquals(24, recordAnalyzer.getMinuteMostlySleptByGuard(10));
     }
+
+    @Test
+    void getGuardKeyWithMostSleep()
+    {
+        GuardRecordAnalyzer recordAnalyzer = createTestObject();
+        assertEquals("99_45", recordAnalyzer.getGuardKeyWithMostSleep());
+    }
+
+    @Test
+    void getProductOfGuardAndMinuteInKey()
+    {
+        GuardRecordAnalyzer recordAnalyzer = createTestObject();
+        String guardKey = recordAnalyzer.getGuardKeyWithMostSleep();
+        assertEquals(4455, GuardRecordAnalyzer.getGuardIdFromKey(guardKey) * GuardRecordAnalyzer.getMinuteFromKey(guardKey));
+    }
 }
