@@ -26,4 +26,26 @@ class PasswordCheckerTest {
         PasswordChecker pc = new PasswordChecker();
         assertFalse(pc.isValid("123789"));
     }
+
+    @Test
+    void isValid_v2_112233()
+    {
+        PasswordChecker pc = new PasswordChecker();
+        assertTrue(pc.isValid_v2("112233"));
+    }
+
+    @Test
+    void isValid_v2_123444()
+    {
+        PasswordChecker pc = new PasswordChecker();
+        assertFalse(pc.isValid_v2("123444"));
+    }
+
+    @Test
+    void isValid_v2_111122()
+    {
+        PasswordChecker pc = new PasswordChecker();
+        assertTrue(pc.isValid_v2("111122"));
+    }
+
 }

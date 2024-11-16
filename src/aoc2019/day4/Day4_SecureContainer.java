@@ -43,6 +43,15 @@ public class Day4_SecureContainer extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        PasswordChecker pwc = new PasswordChecker();
+        int ctr = 0;
+        for (int num = startNum; num <= endNum; num++)
+        {
+            if (pwc.isValid_v2(String.valueOf(num)))
+            {
+                ctr++;
+            }
+        }
+        System.out.println("Number of valid passwords in range (adjacent only up to 2): " + ctr);
     }
 }
