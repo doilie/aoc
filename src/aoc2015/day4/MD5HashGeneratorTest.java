@@ -26,7 +26,7 @@ class MD5HashGeneratorTest
     public void generateSecretKeyDecimalPart_abcdef()
     {
         MD5HashGenerator md5HashGenerator = new MD5HashGenerator("abcdef");
-        long adventCoin = md5HashGenerator.generateSecretKeyDecimalPart(5);
+        long adventCoin = md5HashGenerator.generateSecretKeyDecimalPart(5, 0);
         assertEquals(609043, adventCoin);
     }
 
@@ -34,7 +34,7 @@ class MD5HashGeneratorTest
     public void generateSecretKeyDecimalPart_pqrstuv()
     {
         MD5HashGenerator md5HashGenerator = new MD5HashGenerator("pqrstuv");
-        long adventCoin = md5HashGenerator.generateSecretKeyDecimalPart(5);
+        long adventCoin = md5HashGenerator.generateSecretKeyDecimalPart(5, 0);
         assertEquals(1048970, adventCoin);
     }
 }

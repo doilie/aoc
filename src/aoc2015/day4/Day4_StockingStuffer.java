@@ -21,12 +21,12 @@ public class Day4_StockingStuffer extends Challenge {
     @Override
     public void doOneStarSolution() {
         MD5HashGenerator md5HashGenerator = new MD5HashGenerator(getFileContents());
-        System.out.println("AdventCoin Generator Decimal Part 5 zeroes: " + md5HashGenerator.generateSecretKeyDecimalPart(5));
+        System.out.println("AdventCoin Generator Decimal Part 5 zeroes: " + md5HashGenerator.generateSecretKeyDecimalPart(5, 0));
     }
 
     @Override
     public void doTwoStarSolution() {
         MD5HashGenerator md5HashGenerator = new MD5HashGenerator(getFileContents());
-        System.out.println("AdventCoin Generator Decimal Part 6 zeroes: " + md5HashGenerator.generateSecretKeyDecimalPart(6));
+        System.out.println("AdventCoin Generator Decimal Part 6 zeroes: " + md5HashGenerator.generateSecretKeyDecimalPart(6, 0));
     }
 }

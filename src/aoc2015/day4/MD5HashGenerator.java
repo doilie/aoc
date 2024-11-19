@@ -29,10 +29,9 @@ public class MD5HashGenerator
         return null;
     }
 
-    public long generateSecretKeyDecimalPart(int zeroPrefixLength)
+    public long generateSecretKeyDecimalPart(int zeroPrefixLength, long i)
     {
         String adventCoin = "";
-        long i = 0;
         String prefix = "0".repeat(zeroPrefixLength);
         while (!adventCoin.startsWith(prefix))
         {
