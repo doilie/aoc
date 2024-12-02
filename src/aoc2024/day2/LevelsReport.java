@@ -69,7 +69,7 @@ public class LevelsReport
         return LevelsMode.Invalid;
     }
 
-    private List<List<Integer>> getNumberListPermutations()
+    private List<List<Integer>> getNumberListPermutationsWithoutOneLevel()
     {
         List<List<Integer>> permutations = new ArrayList<>();
         for (int i = 0; i < numbers.size(); i++)
@@ -88,7 +88,7 @@ public class LevelsReport
             return true;
         }
 
-        List<List<Integer>> permutations = getNumberListPermutations();
+        List<List<Integer>> permutations = getNumberListPermutationsWithoutOneLevel();
 
         for (List<Integer> permutation : permutations)
         {
