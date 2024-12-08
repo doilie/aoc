@@ -139,12 +139,23 @@ public class LabMap
     private static class Node
     {
         String position;
+        Direction direction;
         Node next;
 
-        Node(String position)
+        Node(String position, Direction direction)
         {
             this.position = position;
+            this.direction = direction;
             this.next = null;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Node other)
+            {
+                return position.equals(other.position) && direction == other.direction;
+            }
+            return super.equals(obj);
         }
     }
 
@@ -153,7 +164,9 @@ public class LabMap
         Set<Node> visited = new HashSet<>();
         while (head != null)
         {
-            if (visited.contains(head))
+//            if (visited.contains(head))
+            final Node h = head;
+            if (visited.stream().anyMatch(n -> n.position.equals(h.position) && n.direction == h.direction))
                 return true;
 
             visited.add(head);
@@ -164,45 +177,43 @@ public class LabMap
         return false;
     }
 
+    void addNode(Node head, Node newNode)
+    {
+        while (head != null)
+        {
+            if (head.next == null)
+            {
+                head.next = newNode;
+                break;
+            }
+            head = head.next;
+        }
+    }
+
     public boolean hasMovedUntilExit()
     {
         Map<String, Node> nodeMap = new HashMap<>();
-        String headPosition = null;
         String oldPosition = null;
         String newPosition = getNewPosition();
         Node head = null;
-        Node tail = null;
 
         while(!hasExited(newPosition))
         {
             if (shouldTurn(newPosition))
             {
-                Node node = new Node(oldPosition);
-                if (nodeMap.containsKey(oldPosition))
-                {
-                    node = nodeMap.get(oldPosition);
-                }
-                else
-                {
-                    nodeMap.put(oldPosition, node);
-                }
+                turn();
+                Node node = new Node(newPosition, currentDirection);
                 if (head == null)
                 {
                     head = node;
-                    tail = head;
-                    headPosition = oldPosition;
                 }
-                else
-                {
-                    tail.next = node;
-                    tail = node;
+                else {
+                    addNode(head, node);
                 }
-                if (detectLoop(nodeMap.get(headPosition)))
+                if (detectLoop(head))
                 {
                     return false;
                 }
-
-                turn();
                 if (oldPosition != null)
                 {
                     setMarkerForTurn(oldPosition);
@@ -244,7 +255,6 @@ public class LabMap
             {
                 count++;
             }
-
         }
         return count;
     }
