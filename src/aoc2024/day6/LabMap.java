@@ -164,7 +164,6 @@ public class LabMap
         Set<Node> visited = new HashSet<>();
         while (head != null)
         {
-//            if (visited.contains(head))
             final Node h = head;
             if (visited.stream().anyMatch(n -> n.position.equals(h.position) && n.direction == h.direction))
                 return true;
@@ -192,11 +191,11 @@ public class LabMap
 
     public boolean hasMovedUntilExit()
     {
-        Map<String, Node> nodeMap = new HashMap<>();
         String oldPosition = null;
         String newPosition = getNewPosition();
         Node head = null;
 
+        int count = 0;
         while(!hasExited(newPosition))
         {
             if (shouldTurn(newPosition))
@@ -222,6 +221,11 @@ public class LabMap
             else
             {
                 visit(newPosition);
+                count++;
+                if (count > maxX * maxY)
+                {
+                    return false;
+                }
             }
             oldPosition = newPosition;
             newPosition = getNewPosition();
