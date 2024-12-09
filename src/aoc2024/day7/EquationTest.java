@@ -13,14 +13,14 @@ class EquationTest {
     @Test
     void getRecordedResult()
     {
-        Equation equation = new Equation("190: 10 19");
+        Equation equation = new Equation("190: 10 19", List.of(Expression.MULTIPLY, Expression.ADD));
         assertEquals(190, equation.getRecordedResult());
     }
 
     @Test
     void getExpressions()
     {
-        Equation equation = new Equation("190: 10 19");
+        Equation equation = new Equation("190: 10 19", List.of(Expression.MULTIPLY, Expression.ADD));
         List<Expression> expressions = equation.getExpressions();
         assertEquals(2, expressions.size());
     }
@@ -28,7 +28,7 @@ class EquationTest {
     @Test
     void isValidExpression_true()
     {
-        Equation equation = new Equation("190: 10 19");
+        Equation equation = new Equation("190: 10 19", List.of(Expression.MULTIPLY, Expression.ADD));
         Expression expression = new Expression(List.of("10", "*", "19"));
         assertTrue(equation.isValidExpression(expression));
     }
@@ -36,7 +36,7 @@ class EquationTest {
     @Test
     void isValidExpression_false()
     {
-        Equation equation = new Equation("190: 10 19");
+        Equation equation = new Equation("190: 10 19", List.of(Expression.MULTIPLY, Expression.ADD));
         Expression expression = new Expression(List.of("10", "+", "19"));
         assertFalse(equation.isValidExpression(expression));
     }
@@ -44,39 +44,39 @@ class EquationTest {
     @Test
     void hasValidResult_1()
     {
-        Equation equation = new Equation("190: 10 19");
+        Equation equation = new Equation("190: 10 19", List.of(Expression.MULTIPLY, Expression.ADD));
         assertTrue(equation.hasValidResult());
     }
 
     @Test
     void hasValidResult_2()
     {
-        Equation equation = new Equation("3267: 81 40 27");
+        Equation equation = new Equation("3267: 81 40 27", List.of(Expression.MULTIPLY, Expression.ADD));
         assertTrue(equation.hasValidResult());
     }
 
     @Test
     void hasValidResult_3()
     {
-        Equation equation = new Equation("292: 11 6 16 20");
+        Equation equation = new Equation("292: 11 6 16 20", List.of(Expression.MULTIPLY, Expression.ADD));
         assertTrue(equation.hasValidResult());
     }
 
     @Test
     void hasValidResult_4()
     {
-        Equation equation = new Equation("196487536: 7 3 6 4 393 4 1 93 3 7 9 7");
+        Equation equation = new Equation("196487536: 7 3 6 4 393 4 1 93 3 7 9 7", List.of(Expression.MULTIPLY, Expression.ADD));
         assertTrue(equation.hasValidResult());
     }
 
     @Test
     void hasValidResult_5()
     {
-        Equation equation = new Equation("1819723819533: 8 3 62 7 85 3 8 7 64 4 6 7");
+        Equation equation = new Equation("1819723819533: 8 3 62 7 85 3 8 7 64 4 6 7", List.of(Expression.MULTIPLY, Expression.ADD));
         assertFalse(equation.hasValidResult());
     }
 
-    @Test void getValidExpressionSet()
+    @Test void getValidExpressionSet_addMultiply()
     {
         List<Equation> equations = new ArrayList<>(Arrays.stream("""
                 190: 10 19
@@ -87,10 +87,26 @@ class EquationTest {
                 161011: 16 10 13
                 192: 17 8 14
                 21037: 9 7 18 13
-                292: 11 6 16 20""".split("\\n")).map(Equation::new).toList());
+                292: 11 6 16 20""".split("\\n")).map(s -> new Equation(s, List.of(Expression.MULTIPLY, Expression.ADD))).toList());
 
         List<Equation> equationsWithValidResults = equations.stream().filter(Equation::hasValidResult).toList();
         assertEquals(3749, equationsWithValidResults.stream().map(Equation::getRecordedResult).mapToLong(Long::longValue).sum());
     }
 
+    @Test void getValidExpressionSet_addMultiplyConcat()
+    {
+        List<Equation> equations = new ArrayList<>(Arrays.stream("""
+                190: 10 19
+                3267: 81 40 27
+                83: 17 5
+                156: 15 6
+                7290: 6 8 6 15
+                161011: 16 10 13
+                192: 17 8 14
+                21037: 9 7 18 13
+                292: 11 6 16 20""".split("\\n")).map(s -> new Equation(s, List.of(Expression.MULTIPLY, Expression.ADD, Expression.CONCATENATE))).toList());
+
+        List<Equation> equationsWithValidResults = equations.stream().filter(Equation::hasValidResult).toList();
+        assertEquals(11387, equationsWithValidResults.stream().map(Equation::getRecordedResult).mapToLong(Long::longValue).sum());
+    }
 }

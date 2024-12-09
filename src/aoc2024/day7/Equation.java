@@ -8,10 +8,12 @@ public class Equation
 {
     private final List<String> numbers = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
+    private final List<String> possibleOperators = new ArrayList<>();
     private long recordedResult;
 
-    public Equation(String input)
+    public Equation(String input, List<String> possibleOperators)
     {
+        this.possibleOperators.addAll(possibleOperators);
         String[] tokens = input.split(": ");
         if (tokens.length == 2)
         {
@@ -20,10 +22,11 @@ public class Equation
         }
     }
 
-    private void extractExpressions(String numberInput) {
+    private void extractExpressions(String numberInput)
+    {
         numbers.addAll(Arrays.stream(numberInput.split(" ")).toList());
-        List<String> operatorCombinations = Expression.generateCombinations(numbers.size() - 1);
-        for (String operator : operatorCombinations)
+        List<List<String>> operatorCombinations = Expression.generateCombinations(numbers.size() - 1, possibleOperators);
+        for (List<String> operator : operatorCombinations)
         {
             List<String> contents = new ArrayList<>();
             for (int i = 0; i < numbers.size(); i++)
@@ -31,7 +34,7 @@ public class Equation
                 contents.add(numbers.get(i));
                 if (i < numbers.size() - 1)
                 {
-                    contents.add(String.valueOf(operator.charAt(i)));
+                    contents.add(operator.get(i));
                 }
             }
             expressions.add(new Expression(contents));

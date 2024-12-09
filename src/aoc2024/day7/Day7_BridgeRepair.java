@@ -19,28 +19,33 @@ public class Day7_BridgeRepair extends Challenge
         this.parseFile();
     }
 
-    private final List<Equation> equations = new ArrayList<>();
+    private final String[] lines = getFileContents().split("\\n");
 
     @Override
     protected void parseFile()
     {
-        String[] lines = getFileContents().split("\\n");
-        for (String line : lines)
-        {
-            equations.add(new Equation(line));
-        }
     }
 
     @Override
     public void doOneStarSolution()
     {
-        List<Equation> equationsWithValidResults = equations.stream().filter(Equation::hasValidResult).toList();
-        System.out.println("Total calibration result : " + equationsWithValidResults.stream().map(Equation::getRecordedResult).mapToLong(Long::longValue).sum());
+        System.out.println("Total calibration result : " + getCalibrationResult(List.of(Expression.MULTIPLY, Expression.ADD)));
     }
 
     @Override
     public void doTwoStarSolution()
     {
-//        System.out.println("Number of positions that cause loop : " + labMap.countPositionsThatCauseLoop());
+        System.out.println("Total calibration result with concatenate: " + getCalibrationResult(List.of(Expression.MULTIPLY, Expression.ADD, Expression.CONCATENATE)));
+    }
+
+    private long getCalibrationResult(List<String> possibleOperators)
+    {
+        List<Equation> equations = new ArrayList<>();
+        for (String line : lines)
+        {
+            equations.add(new Equation(line, possibleOperators));
+        }
+        List<Equation> equationsWithValidResults = equations.stream().filter(Equation::hasValidResult).toList();
+        return equationsWithValidResults.stream().map(Equation::getRecordedResult).mapToLong(Long::longValue).sum();
     }
 }

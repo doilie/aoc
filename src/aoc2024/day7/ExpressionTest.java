@@ -47,28 +47,82 @@ class ExpressionTest {
     @Test
     void generateCombinations_1()
     {
-        List<String> combinations = Expression.generateCombinations(1);
+        List<List<String>> combinations = Expression.generateCombinations(1, List.of(Expression.MULTIPLY, Expression.ADD));
         assertEquals(2, combinations.size());
-        assertEquals("*", combinations.get(0));
-        assertEquals("+", combinations.get(1));
+        assertEquals(List.of("*"), combinations.get(0));
+        assertEquals(List.of("+"), combinations.get(1));
     }
 
     @Test
     void generateCombinations_2()
     {
-        List<String> combinations = Expression.generateCombinations(2);
+        List<List<String>> combinations = Expression.generateCombinations(2, List.of(Expression.MULTIPLY, Expression.ADD));
         assertEquals(4, combinations.size());
-        assertEquals(List.of("**", "*+", "+*", "++"), combinations);
+        assertEquals(List.of(List.of("*", "*"), List.of("*", "+"), List.of("+", "*"), List.of("+", "+")), combinations);
     }
 
     @Test
     void generateCombinations_3()
     {
-        List<String> combinations = Expression.generateCombinations(3);
+        List<List<String>> combinations = Expression.generateCombinations(3, List.of(Expression.MULTIPLY, Expression.ADD));
         assertEquals(8, combinations.size());
-        assertEquals(List.of("***", "**+", "*+*", "*++", "+**", "+*+", "++*", "+++"), combinations);
-        combinations = Expression.generateCombinations(2);
+        assertEquals(List.of(
+                List.of("*", "*", "*"),
+                List.of("*", "*", "+"),
+                List.of("*", "+", "*"),
+                List.of("*", "+", "+"),
+                List.of("+", "*", "*"),
+                List.of("+", "*", "+"),
+                List.of("+", "+", "*"),
+                List.of("+", "+", "+")), combinations);
+        combinations = Expression.generateCombinations(2, List.of(Expression.MULTIPLY, Expression.ADD));
         assertEquals(4, combinations.size());
-        assertEquals(List.of("**", "*+", "+*", "++"), combinations);
+        assertEquals(List.of(List.of("*", "*"), List.of("*", "+"), List.of("+", "*"), List.of("+", "+")), combinations);
+    }
+
+    @Test
+    void generateCombinations_1_concat()
+    {
+        List<List<String>> combinations = Expression.generateCombinations(1, List.of(Expression.MULTIPLY, Expression.ADD, Expression.CONCATENATE));
+        assertEquals(3, combinations.size());
+        assertEquals(List.of(List.of("*"), List.of("+"), List.of("||")), combinations);
+    }
+
+    @Test
+    void generateCombinations_2_concat()
+    {
+        List<List<String>> combinations = Expression.generateCombinations(2, List.of(Expression.MULTIPLY, Expression.ADD, Expression.CONCATENATE));
+        assertEquals(9, combinations.size());
+        assertEquals(List.of(
+                List.of("*", "*"),
+                List.of("*", "+"),
+                List.of("*", "||"),
+                List.of("+", "*"),
+                List.of("+", "+"),
+                List.of("+", "||"),
+                List.of("||", "*"),
+                List.of("||", "+"),
+                List.of("||", "||")), combinations);
+    }
+
+    @Test
+    void evaluate_concat_1()
+    {
+        Expression expression = new Expression(List.of("15", "||", "6"));
+        assertEquals(156, expression.evaluate());
+    }
+
+    @Test
+    void evaluate_concat_2()
+    {
+        Expression expression = new Expression(List.of("6", "*", "8", "||", "6", "*", "15"));
+        assertEquals(7290, expression.evaluate());
+    }
+
+    @Test
+    void evaluate_concat_3()
+    {
+        Expression expression = new Expression(List.of("17", "||", "8", "+", "14"));
+        assertEquals(192, expression.evaluate());
     }
 }
