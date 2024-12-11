@@ -9,15 +9,10 @@ public class AntennaField
     private static final String FREE = ".";
 
     private final Map<String, AntennaGroup> antennaGroups;
-    private final Set<String> antinodePositions = new HashSet<>();
 
     public AntennaField(String input)
     {
         antennaGroups = getAntennas(input);
-        for (AntennaGroup group : antennaGroups.values())
-        {
-            antinodePositions.addAll(group.getAntinodes());
-        }
     }
 
     public AntennaGroup getAntennaGroup(String antenna)
@@ -27,6 +22,21 @@ public class AntennaField
 
     public Set<String> getAntinodePositions()
     {
+        Set<String> antinodePositions = new HashSet<>();
+        for (AntennaGroup group : antennaGroups.values())
+        {
+            antinodePositions.addAll(group.getAntinodes());
+        }
+        return antinodePositions;
+    }
+
+    public Set<String> getAntinodePositionsUntilEnd()
+    {
+        Set<String> antinodePositions = new HashSet<>();
+        for (AntennaGroup group : antennaGroups.values())
+        {
+            antinodePositions.addAll(group.getAntinodesUntilEnd());
+        }
         return antinodePositions;
     }
 

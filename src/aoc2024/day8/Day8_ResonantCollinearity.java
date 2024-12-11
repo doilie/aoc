@@ -16,7 +16,7 @@ public class Day8_ResonantCollinearity extends Challenge
         this.parseFile();
     }
 
-
+    private final AntennaField antennaField = new AntennaField(getFileContents());
 
     @Override
     protected void parseFile()
@@ -28,13 +28,12 @@ public class Day8_ResonantCollinearity extends Challenge
     @Override
     public void doOneStarSolution()
     {
-        AntennaField antennaField = new AntennaField(getFileContents());
         System.out.println("Number of antinodes : " + antennaField.getAntinodePositions().size());
     }
 
     @Override
     public void doTwoStarSolution()
     {
-//        System.out.println("Total calibration result with concatenate: " + getCalibrationResult(List.of(Expression.MULTIPLY, Expression.ADD, Expression.CONCATENATE)));
+        System.out.println("Number of repeating antinodes : " + antennaField.getAntinodePositionsUntilEnd().size());
     }
 }

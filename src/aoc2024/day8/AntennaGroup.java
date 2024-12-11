@@ -48,6 +48,17 @@ public class AntennaGroup
         return antinodes;
     }
 
+
+    public Set<String> getAntinodesUntilEnd()
+    {
+        Set<String> antinodes = new HashSet<>();
+        for (List<String> antennaPair : antennaPairs)
+        {
+            antinodes.addAll(getAntinodePositionsUntilEnd(antennaPair.get(0), antennaPair.get(1)));
+        }
+        return antinodes;
+    }
+
     private static String getPairDifference(String position1, String position2)
     {
         int x1 = Position.getX(position1);
@@ -70,6 +81,32 @@ public class AntennaGroup
         if (isWithinSize(Position.getX(position2) + xDiff) && isWithinSize(Position.getY(position2) + yDiff))
         {
             antinodePositions.add(Position.getPosition(Position.getX(position2) + xDiff, Position.getY(position2) + yDiff));
+        }
+        return antinodePositions;
+    }
+
+
+    public static Set<String> getAntinodePositionsUntilEnd(String position1, String position2)
+    {
+        String difference = getPairDifference(position1, position2);
+        int xDiff = Position.getX(difference);
+        int yDiff = Position.getY(difference);
+        Set<String> antinodePositions = new HashSet<>();
+        int x1 = Position.getX(position1);
+        int y1 = Position.getY(position1);
+        while (isWithinSize(x1) && isWithinSize(y1))
+        {
+            antinodePositions.add(Position.getPosition(x1, y1));
+            x1 -= xDiff;
+            y1 -= yDiff;
+        }
+        int x2 = Position.getX(position2);
+        int y2 = Position.getY(position2);
+        while (isWithinSize(x2) && isWithinSize(y2))
+        {
+            antinodePositions.add(Position.getPosition(x2, y2));
+            x2 += xDiff;
+            y2 += yDiff;
         }
         return antinodePositions;
     }

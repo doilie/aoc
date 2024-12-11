@@ -72,4 +72,12 @@ class AntennaGroupTest {
         AntennaGroup antennaGroup = new AntennaGroup(List.of("4,3", "5,5", "8,4"));
         assertEquals(Set.of("3,1", "0,2", "2,6", "6,7"), antennaGroup.getAntinodes());
     }
+
+    @Test
+    void getAntinodePositionsUntilEnd_1()
+    {
+        AntennaGroup.setSize(10);
+        Set<String> antinodes = AntennaGroup.getAntinodePositionsUntilEnd("0,0", "3,1");
+        assertEquals(Set.of("0,0", "3,1", "6,2", "9,3"), antinodes);
+    }
 }

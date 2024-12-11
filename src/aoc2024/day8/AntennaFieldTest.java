@@ -53,7 +53,7 @@ class AntennaFieldTest
     }
 
     @Test
-    void getAntinodes_1()
+    void getAntinodePositions_1()
     {
         String input = """
                 ..........
@@ -73,7 +73,7 @@ class AntennaFieldTest
     }
 
     @Test
-    void getAntinodes_2()
+    void getAntinodePositions_2()
     {
         String input = """
                 ..........
@@ -93,7 +93,7 @@ class AntennaFieldTest
     }
 
     @Test
-    void getAntinodes_3()
+    void getAntinodePositions_3()
     {
         String input = """
                 ............
@@ -112,5 +112,28 @@ class AntennaFieldTest
         AntennaGroup.setSize(lines.length);
         AntennaField antennaField = new AntennaField(input);
         assertEquals(14, antennaField.getAntinodePositions().size());
+    }
+
+
+    @Test
+    void getAntinodePositionsUntilEnd_1()
+    {
+        String input = """
+                ............
+                ........0...
+                .....0......
+                .......0....
+                ....0.......
+                ......A.....
+                ............
+                ............
+                ........A...
+                .........A..
+                ............
+                ............""";
+        String[] lines = input.split("\n");
+        AntennaGroup.setSize(lines.length);
+        AntennaField antennaField = new AntennaField(input);
+        assertEquals(34, antennaField.getAntinodePositionsUntilEnd().size());
     }
 }
