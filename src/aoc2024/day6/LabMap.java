@@ -138,13 +138,15 @@ public class LabMap
 
     private static class Node
     {
-        String position;
+        String start;
+        String end;
         Direction direction;
         Node next;
 
-        Node(String position, Direction direction)
+        Node(String start, String end, Direction direction)
         {
-            this.position = position;
+            this.start = start;
+            this.end = end;
             this.direction = direction;
             this.next = null;
         }
@@ -153,7 +155,7 @@ public class LabMap
         public boolean equals(Object obj) {
             if (obj instanceof Node other)
             {
-                return position.equals(other.position) && direction == other.direction;
+                return start.equals(other.start) && end.equals(other.end) && direction == other.direction;
             }
             return super.equals(obj);
         }
@@ -165,7 +167,7 @@ public class LabMap
         while (head != null)
         {
             final Node h = head;
-            if (visited.stream().anyMatch(n -> n.position.equals(h.position) && n.direction == h.direction))
+            if (visited.stream().anyMatch(n -> n.end.equals(h.end) && n.direction == h.direction))
                 return true;
 
             visited.add(head);
@@ -193,15 +195,17 @@ public class LabMap
     {
         String oldPosition = null;
         String newPosition = getNewPosition();
+        String lastTurn = null;
+        int count = 0;
         Node head = null;
 
-        int count = 0;
         while(!hasExited(newPosition))
         {
             if (shouldTurn(newPosition))
             {
                 turn();
-                Node node = new Node(newPosition, currentDirection);
+                Node node = new Node(lastTurn, newPosition, currentDirection);
+                lastTurn = newPosition;
                 if (head == null)
                 {
                     head = node;
