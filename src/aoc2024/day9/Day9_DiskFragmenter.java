@@ -16,8 +16,6 @@ public class Day9_DiskFragmenter extends Challenge
         this.parseFile();
     }
 
-    private final DiskDefragmenter defragmenter = new DiskDefragmenter(getFileContents().trim());
-
     @Override
     protected void parseFile()
     {
@@ -27,6 +25,7 @@ public class Day9_DiskFragmenter extends Challenge
     @Override
     public void doOneStarSolution()
     {
+        DiskDefragmenter defragmenter = new DiskDefragmenter(getFileContents().trim());
         defragmenter.defragment();
         System.out.println("Filesystem checksum : " + defragmenter.getFileSystemCheckSum());
     }
@@ -34,6 +33,8 @@ public class Day9_DiskFragmenter extends Challenge
     @Override
     public void doTwoStarSolution()
     {
-//        System.out.println("Number of repeating antinodes : " + defragmenter.getAntinodePositionsUntilEnd().size());
+        DiskDefragmenter defragmenter = new DiskDefragmenter(getFileContents().trim());
+        defragmenter.defragment_v2();
+        System.out.println("Filesystem checksum according to decreasing file id number : " + defragmenter.getFileSystemCheckSum());
     }
 }

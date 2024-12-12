@@ -17,11 +17,11 @@ class DiskDefragmenterTest
         assertEquals(5, diskBlocks.size());
         Set<DiskBlock> freeBlocks = diskDefragmenter.getFreeBlocks();
         assertEquals(2, freeBlocks.size());
-        assertEquals(1, diskDefragmenter.getLowestFreeBlock().getLocation());
+        assertEquals(1, diskDefragmenter.getNearestFreeBlock().getLocation());
         Set<DiskBlock> idBlocks = diskDefragmenter.getIdBlocks();
         assertEquals(3, idBlocks.size());
-        assertEquals(10, diskDefragmenter.getHighestIdBlock().getLocation());
-        assertEquals(2, diskDefragmenter.getHighestIdBlock().getId());
+        assertEquals(10, diskDefragmenter.getFarthestIdBlock().getLocation());
+        assertEquals(2, diskDefragmenter.getFarthestIdBlock().getId());
     }
 
     @Test
@@ -32,11 +32,11 @@ class DiskDefragmenterTest
         assertEquals(18, diskBlocks.size());
         Set<DiskBlock> freeBlocks = diskDefragmenter.getFreeBlocks();
         assertEquals(8, freeBlocks.size());
-        assertEquals(2, diskDefragmenter.getLowestFreeBlock().getLocation());
+        assertEquals(2, diskDefragmenter.getNearestFreeBlock().getLocation());
         Set<DiskBlock> idBlocks = diskDefragmenter.getIdBlocks();
         assertEquals(10, idBlocks.size());
-        assertEquals(40, diskDefragmenter.getHighestIdBlock().getLocation());
-        assertEquals(9, diskDefragmenter.getHighestIdBlock().getId());
+        assertEquals(40, diskDefragmenter.getFarthestIdBlock().getLocation());
+        assertEquals(9, diskDefragmenter.getFarthestIdBlock().getId());
     }
 
     @Test
@@ -44,8 +44,8 @@ class DiskDefragmenterTest
     {
         DiskDefragmenter diskDefragmenter = new DiskDefragmenter("12345");
         diskDefragmenter.defragment();
-        assertEquals(9, diskDefragmenter.getLowestFreeBlock().getLocation());
-        assertTrue(diskDefragmenter.getLowestFreeBlock().getLocation() > diskDefragmenter.getHighestIdBlock().getLocation());
+        assertEquals(9, diskDefragmenter.getNearestFreeBlock().getLocation());
+        assertTrue(diskDefragmenter.getNearestFreeBlock().getLocation() > diskDefragmenter.getFarthestIdBlock().getLocation());
     }
 
 
@@ -55,6 +55,15 @@ class DiskDefragmenterTest
         DiskDefragmenter diskDefragmenter = new DiskDefragmenter("2333133121414131402");
         diskDefragmenter.defragment();
         assertEquals(1928, diskDefragmenter.getFileSystemCheckSum());
+    }
+
+
+    @Test
+    void getFileSystemCheckSum_defragment_v2()
+    {
+        DiskDefragmenter diskDefragmenter = new DiskDefragmenter("2333133121414131402");
+        diskDefragmenter.defragment_v2();
+        assertEquals(2858, diskDefragmenter.getFileSystemCheckSum());
     }
 
 }

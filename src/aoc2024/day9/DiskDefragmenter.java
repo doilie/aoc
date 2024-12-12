@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class DiskDefragmenter {
     private final String input;
     private final Set<DiskBlock> diskBlocks = new HashSet<>();
+    private int highestId = -1;
 
     public DiskDefragmenter(String input) {
         this.input = input;
@@ -26,7 +27,7 @@ public class DiskDefragmenter {
         return diskBlocks.stream().filter(d -> !d.isFree()).collect(Collectors.toSet());
     }
 
-    public DiskBlock getLowestFreeBlock()
+    public DiskBlock getNearestFreeBlock()
     {
         int lowestPosition = Integer.MAX_VALUE;
         Set<DiskBlock> freeBlocks = getFreeBlocks();
@@ -42,7 +43,23 @@ public class DiskDefragmenter {
         return lowestBlock;
     }
 
-    public DiskBlock getHighestIdBlock()
+    public DiskBlock getNearestFreeBlockWithSize(int size)
+    {
+        int lowestPosition = Integer.MAX_VALUE;
+        Set<DiskBlock> freeBlocks = getFreeBlocks();
+        DiskBlock lowestBlock = null;
+        for (DiskBlock diskBlock : freeBlocks)
+        {
+            if (diskBlock.getSize() >= size && diskBlock.getLocation() < lowestPosition)
+            {
+                lowestBlock = diskBlock;
+                lowestPosition = diskBlock.getLocation();
+            }
+        }
+        return lowestBlock;
+    }
+
+    public DiskBlock getFarthestIdBlock()
     {
         int highestPosition = -1;
         Set<DiskBlock> idBlocks = getIdBlocks();
@@ -58,43 +75,69 @@ public class DiskDefragmenter {
         return highestBlock;
     }
 
+    public DiskBlock getDiskBlockById(int id)
+    {
+        return diskBlocks.stream().filter(d -> d.getId() == id).toList().get(0);
+    }
+
     public void defragment()
     {
-        DiskBlock lowestFreeBlock = getLowestFreeBlock();
-        DiskBlock highestIdBlock = getHighestIdBlock();
+        DiskBlock nearestFreeBlock = getNearestFreeBlock();
+        DiskBlock farthestFreeBlock = getFarthestIdBlock();
 
-        while (lowestFreeBlock.getLocation() < highestIdBlock.getLocation())
+        while (nearestFreeBlock.getLocation() < farthestFreeBlock.getLocation())
         {
-            if (lowestFreeBlock.getSize() == 0)
+            if (farthestFreeBlock.getSize() == nearestFreeBlock.getSize())
             {
-                diskBlocks.remove(lowestFreeBlock);
+                nearestFreeBlock.setId(farthestFreeBlock.getId());
+                farthestFreeBlock.setId(DiskBlock.FREE);
+            }
+            else if (farthestFreeBlock.getSize() > nearestFreeBlock.getSize())
+            {
+                nearestFreeBlock.setId(farthestFreeBlock.getId());
+                int remainingIdBlocks = farthestFreeBlock.getSize() - nearestFreeBlock.getSize();
+                farthestFreeBlock.setSize(remainingIdBlocks);
             }
             else
             {
-                if (highestIdBlock.getSize() == lowestFreeBlock.getSize())
-                {
-                    lowestFreeBlock.setId(highestIdBlock.getId());
-                    highestIdBlock.setId(DiskBlock.FREE);
-                }
-                else if (highestIdBlock.getSize() > lowestFreeBlock.getSize())
-                {
-                    lowestFreeBlock.setId(highestIdBlock.getId());
-                    int remainingIdBlocks = highestIdBlock.getSize() - lowestFreeBlock.getSize();
-                    highestIdBlock.setSize(remainingIdBlocks);
-                }
-                else
-                {
-                    int remainingFreeBlocks = lowestFreeBlock.getSize() - highestIdBlock.getSize();
-                    int idBlockSize = highestIdBlock.getSize();
-                    int freeLocation = lowestFreeBlock.getLocation();
-                    lowestFreeBlock.setId(highestIdBlock.getId());
-                    lowestFreeBlock.setSize(highestIdBlock.getSize());
-                    diskBlocks.add(DiskBlock.buildFreeBlock(remainingFreeBlocks, freeLocation + idBlockSize));
-                    highestIdBlock.setId(DiskBlock.FREE);
-                }
+                int remainingFreeBlocks = nearestFreeBlock.getSize() - farthestFreeBlock.getSize();
+                int idBlockSize = farthestFreeBlock.getSize();
+                int freeLocation = nearestFreeBlock.getLocation();
+                nearestFreeBlock.setId(farthestFreeBlock.getId());
+                nearestFreeBlock.setSize(farthestFreeBlock.getSize());
+                diskBlocks.add(DiskBlock.buildFreeBlock(remainingFreeBlocks, freeLocation + idBlockSize));
+                farthestFreeBlock.setId(DiskBlock.FREE);
             }
-            lowestFreeBlock = getLowestFreeBlock();
-            highestIdBlock = getHighestIdBlock();
+            nearestFreeBlock = getNearestFreeBlock();
+            farthestFreeBlock = getFarthestIdBlock();
+        }
+    }
+
+    public void defragment_v2()
+    {
+        for (int id = highestId; id >= 0; id--)
+        {
+            DiskBlock idBlock = getDiskBlockById(id);
+            DiskBlock nearestFreeBlock = getNearestFreeBlockWithSize(idBlock.getSize());
+            if (nearestFreeBlock == null || nearestFreeBlock.getLocation() > idBlock.getLocation())
+            {
+                continue;
+            }
+            if (idBlock.getSize() == nearestFreeBlock.getSize())
+            {
+                nearestFreeBlock.setId(idBlock.getId());
+                idBlock.setId(DiskBlock.FREE);
+            }
+            else if (idBlock.getSize() < nearestFreeBlock.getSize())
+            {
+                int remainingFreeBlocks = nearestFreeBlock.getSize() - idBlock.getSize();
+                int idBlockSize = idBlock.getSize();
+                int freeLocation = nearestFreeBlock.getLocation();
+                nearestFreeBlock.setId(idBlock.getId());
+                nearestFreeBlock.setSize(idBlock.getSize());
+                diskBlocks.add(DiskBlock.buildFreeBlock(remainingFreeBlocks, freeLocation + idBlockSize));
+                idBlock.setId(DiskBlock.FREE);
+            }
         }
     }
 
@@ -115,6 +158,7 @@ public class DiskDefragmenter {
                 if (i % 2 == 0)
                 {
                     diskBlocks.add(DiskBlock.buildIdBlock(id++, size, location));
+                    highestId++;
                 }
                 else {
                     diskBlocks.add(DiskBlock.buildFreeBlock(size, location));
