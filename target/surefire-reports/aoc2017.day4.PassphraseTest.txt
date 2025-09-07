@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: aoc2017.day4.PassphraseTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s - in aoc2017.day4.PassphraseTest

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: aoc2024.day8.AntennaFieldTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s - in aoc2024.day8.AntennaFieldTest

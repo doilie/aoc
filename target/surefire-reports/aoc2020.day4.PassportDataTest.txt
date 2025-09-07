@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: aoc2020.day4.PassportDataTest
+-------------------------------------------------------------------------------
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s - in aoc2020.day4.PassportDataTest
