@@ -35,7 +35,11 @@ public class Day6_FireHazard extends Challenge
 
     @Override
     public void doOneStarSolution() {
-        // System.out.println("Number of nice strings: " + niceStrings.stream().filter(NiceString::isNiceString).count());
+        LightGrid grid = new LightGrid(1000, 1000);
+        for (LightInstruction instruction : lightInstructions) {
+            grid.applyInstruction(instruction);
+        }
+        System.out.println("Number of lights on: " + grid.countLightsOn());
     }
 
     @Override
