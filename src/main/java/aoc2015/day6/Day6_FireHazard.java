@@ -35,7 +35,7 @@ public class Day6_FireHazard extends Challenge
 
     @Override
     public void doOneStarSolution() {
-        LightGrid grid = new LightGrid(1000, 1000);
+        LightGridOnOff grid = new LightGridOnOff(1000, 1000);
         for (LightInstruction instruction : lightInstructions) {
             grid.applyInstruction(instruction);
         }
@@ -44,7 +44,11 @@ public class Day6_FireHazard extends Challenge
 
     @Override
     public void doTwoStarSolution() {
-        // System.out.println("Number of nice strings from new rules: " + niceStrings.stream().filter(NiceString::isNiceString_v2).count());
+        LightGridBrightness grid = new LightGridBrightness(1000, 1000);
+        for (LightInstruction instruction : lightInstructions) {
+            grid.applyInstruction(instruction);
+        }
+        System.out.println("Total brightess of lights: " + grid.countLightsOn());
     }
 
 }
