@@ -2,6 +2,9 @@ package aoc2019.day5;
 
 import lib.Challenge;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Day5_SunnyWithAsteroids extends Challenge {
     public static void main(String[] args) {
         Day5_SunnyWithAsteroids day5 = new Day5_SunnyWithAsteroids();
@@ -32,6 +35,11 @@ public class Day5_SunnyWithAsteroids extends Challenge {
         computer.addInput(1);
         computer.runProgram();
         System.out.println("Diagnostic code (1 star): " + computer.getLastOutput());
+        IntcodeComputerV2 computerV2 = new IntcodeComputerV2(Arrays.stream(program).boxed().collect(Collectors.toList()));
+        computerV2.addInput(1);
+        IntcodeExecution execution = new IntcodeExecution(computerV2);
+        execution.execute();
+        System.out.println("Diagnostic code (1 star) v2: " + computerV2.readOutput());
     }
 
     @Override
