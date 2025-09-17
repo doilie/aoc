@@ -1,7 +1,6 @@
 package aoc2023.day12;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class OnsenRow {
     private static final String DAMAGED = "#";
