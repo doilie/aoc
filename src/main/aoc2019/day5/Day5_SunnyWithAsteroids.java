@@ -14,6 +14,7 @@ public class Day5_SunnyWithAsteroids extends Challenge {
 
     public Day5_SunnyWithAsteroids() {
         super("2019/day5-input.txt");
+        this.parseFile();
     }
 
     private int[] program;
@@ -30,24 +31,19 @@ public class Day5_SunnyWithAsteroids extends Challenge {
 
     @Override
     public void doOneStarSolution() {
-        this.parseFile();
-        IntcodeComputer computer = new IntcodeComputer(program);
+        IntcodeComputer computer = new IntcodeComputer(Arrays.stream(program).boxed().collect(Collectors.toList()));
         computer.addInput(1);
-        computer.runProgram();
-        System.out.println("Diagnostic code (1 star): " + computer.getLastOutput());
-        IntcodeComputerV2 computerV2 = new IntcodeComputerV2(Arrays.stream(program).boxed().collect(Collectors.toList()));
-        computerV2.addInput(1);
-        IntcodeExecution execution = new IntcodeExecution(computerV2);
-        execution.execute();
-        System.out.println("Diagnostic code (1 star) v2: " + computerV2.readOutput());
+        IntcodeController controller = new IntcodeController(computer);
+        controller.execute();
+        System.out.println("Diagnostic code (1 star): " + computer.readOutput());
     }
 
     @Override
     public void doTwoStarSolution() {
-        this.parseFile();
-        // IntcodeComputer computer = new IntcodeComputer(program);
-        // computer.addInput(5);
-        // computer.runProgram();
-        // System.out.println("Diagnostic code (2 star): " + computer.getLastOutput());
+        IntcodeComputer computer = new IntcodeComputer(Arrays.stream(program).boxed().collect(Collectors.toList()));
+        computer.addInput(5);
+        IntcodeController controller = new IntcodeController(computer);
+        controller.execute();
+        System.out.println("Diagnostic code (2 star): " + computer.readOutput());
     }
 }

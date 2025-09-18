@@ -4,12 +4,12 @@ import java.util.function.BiFunction;
 
 public class BinaryOperation implements IntcodeOperationAction
 {
-    private final IntcodeComputerV2 computer;
+    private final IntcodeComputer computer;
     private final BiFunction<Integer, Integer, Integer> operation;
     private final boolean isFirstInputImmediate;
     private final boolean isSecondInputImmediate;
 
-    public BinaryOperation(IntcodeComputerV2 memory, BiFunction<Integer, Integer, Integer> operation, boolean isFirstInputImmediate, boolean isSecondInputImmediate)
+    public BinaryOperation(IntcodeComputer memory, BiFunction<Integer, Integer, Integer> operation, boolean isFirstInputImmediate, boolean isSecondInputImmediate)
     {
         this.computer = memory;
         this.operation = operation;
@@ -21,8 +21,8 @@ public class BinaryOperation implements IntcodeOperationAction
     public void execute()
     {
         int instructionPointer = computer.getInstructionPointerPosition();
-        int position1 = isFirstInputImmediate ? instructionPointer + 1 : computer.getValueInPosition(instructionPointer + 1);
-        int position2 = isSecondInputImmediate ? instructionPointer + 2 : computer.getValueInPosition(instructionPointer + 2);
+        int position1 = IntcodeController.getTargetPosition(computer, instructionPointer + 1, isFirstInputImmediate);
+        int position2 = IntcodeController.getTargetPosition(computer, instructionPointer + 2, isSecondInputImmediate);
         int num1 = computer.getValueInPosition(position1);
         int num2 = computer.getValueInPosition(position2);
         int outputPosition = computer.getValueInPosition(instructionPointer + 3);

@@ -2,9 +2,9 @@ package aoc2019.day5;
 
 public class InputOperation implements IntcodeOperationAction
 {
-    private final IntcodeComputerV2 computer;
+    private final IntcodeComputer computer;
 
-    public InputOperation(IntcodeComputerV2 computer)
+    public InputOperation(IntcodeComputer computer)
     {
         this.computer = computer;
     }

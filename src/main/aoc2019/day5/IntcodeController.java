@@ -1,10 +1,10 @@
 package aoc2019.day5;
 
-public class IntcodeExecution
+public class IntcodeController
 {
-    private final IntcodeComputerV2 computer;
+    private final IntcodeComputer computer;
 
-    public IntcodeExecution(IntcodeComputerV2 computer)
+    public IntcodeController(IntcodeComputer computer)
     {
         this.computer = computer;
     }
@@ -33,6 +33,10 @@ public class IntcodeExecution
             case MULTIPLICATION -> new BinaryOperation(computer, (a, b) -> a * b, isFirstInputImmediate, isSecondInputImmediate);
             case INPUT -> new InputOperation(computer);
             case OUTPUT -> new OutputOperation(computer, isFirstInputImmediate);
+            case JUMP_IF_TRUE -> new JumpOperation(computer, val -> val != 0, isFirstInputImmediate, isSecondInputImmediate);
+            case JUMP_IF_FALSE -> new JumpOperation(computer, val -> val == 0, isFirstInputImmediate, isSecondInputImmediate);
+            case LESS_THAN -> new BinaryOperation(computer, (a, b) -> (a < b) ? 1 : 0, isFirstInputImmediate, isSecondInputImmediate);
+            case EQUALS -> new BinaryOperation(computer, (a, b) -> (a.equals(b)) ? 1 : 0, isFirstInputImmediate, isSecondInputImmediate);
             case HALT -> null;
         };
     }
@@ -50,5 +54,10 @@ public class IntcodeExecution
     private static boolean isSecondInputImmediate(int instruction)
     {
         return ((instruction / 1000) % 10) == 1;
+    }
+
+    public static int getTargetPosition(IntcodeComputer computer, int origPosition, boolean isImmediate)
+    {
+        return isImmediate ? origPosition : computer.getValueInPosition(origPosition);
     }
 }

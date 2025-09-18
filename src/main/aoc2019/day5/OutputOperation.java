@@ -2,10 +2,10 @@ package aoc2019.day5;
 
 public class OutputOperation implements IntcodeOperationAction
 {
-    private final IntcodeComputerV2 computer;
+    private final IntcodeComputer computer;
     private final boolean isImmediate;
 
-    public OutputOperation(IntcodeComputerV2 computer, boolean isImmediate)
+    public OutputOperation(IntcodeComputer computer, boolean isImmediate)
     {
         this.computer = computer;
         this.isImmediate = isImmediate;
@@ -14,7 +14,7 @@ public class OutputOperation implements IntcodeOperationAction
     @Override
     public void execute()
     {
-        int position = isImmediate ? computer.getInstructionPointerPosition() + 1 : computer.getValueInPosition(computer.getInstructionPointerPosition() + 1);
+        int position = IntcodeController.getTargetPosition(computer, computer.getInstructionPointerPosition() + 1, isImmediate);
         int value = computer.getValueInPosition(position);
         computer.updateOutput(value);
     }
