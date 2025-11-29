@@ -20,18 +20,14 @@ public class LanternFish
     void decreaseTimer()
     {
         timerDaysLeft--;
-        if (hasTimerExpired())
-        {
-            resetTimer();
-        }
     }
 
-    private boolean hasTimerExpired()
+    boolean hasTimerExpired()
     {
         return timerDaysLeft < 0;
     }
 
-    private void resetTimer()
+    void resetTimer()
     {
         timerDaysLeft = FISH_RESET_TIMER_DAYS;
     }
@@ -39,5 +35,10 @@ public class LanternFish
     int getTimerDaysLeft()
     {
         return timerDaysLeft;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(timerDaysLeft);
     }
 }

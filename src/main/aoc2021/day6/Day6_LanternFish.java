@@ -2,6 +2,8 @@ package aoc2021.day6;
 
 import lib.Challenge;
 
+import java.util.stream.IntStream;
+
 public class Day6_LanternFish extends Challenge
 {
     public static void main(String[] args)
@@ -26,12 +28,13 @@ public class Day6_LanternFish extends Challenge
     @Override
     public void doOneStarSolution()
     {
-
+        LanternFishSchool lanternFishSchool = new LanternFishSchool(this.getFileContents());
+        IntStream.range(0, 80).forEach(i -> lanternFishSchool.moveToNextDay());
+        System.out.println("Number of fish after 80 days: " + lanternFishSchool.getNumberOfFishes());
     }
 
     @Override
     public void doTwoStarSolution()
     {
-
     }
 }
