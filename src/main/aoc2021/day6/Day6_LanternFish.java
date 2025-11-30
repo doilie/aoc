@@ -36,5 +36,8 @@ public class Day6_LanternFish extends Challenge
     @Override
     public void doTwoStarSolution()
     {
+        LanternFishSchool lanternFishSchool = new LanternFishSchool(this.getFileContents());
+        IntStream.range(0, 256).forEach(i -> lanternFishSchool.moveToNextDay());
+        System.out.println("Number of fish after 256 days: " + lanternFishSchool.getNumberOfFishes());
     }
 }

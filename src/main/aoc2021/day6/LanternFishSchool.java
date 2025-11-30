@@ -1,37 +1,70 @@
 package aoc2021.day6;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class LanternFishSchool
 {
-    private final List<LanternFish> lanternFishList = new ArrayList<>();
+    private static final int NEW_FISH_TIMER_DAYS = 8;
+    private static final int FISH_RESET_TIMER_DAYS = NEW_FISH_TIMER_DAYS - 2;
+
+    private Map<Integer, Long> timerDaysFishCount;
 
     LanternFishSchool(String timerDaysLeftList)
     {
+        Map<Integer, Long> initTimerDaysFishCount = new HashMap<>();
         String[] timerDaysLeftArr = timerDaysLeftList.split(",");
-        lanternFishList.addAll(Arrays.stream(timerDaysLeftArr).map(Integer::parseInt).map(LanternFish::new).toList());
+        for (String s : timerDaysLeftArr)
+        {
+            addFishToTimerDays(initTimerDaysFishCount, Integer.parseInt(s), 1);
+        }
+        setNewTimerDaysFishCount(initTimerDaysFishCount);
+    }
+
+    private void setNewTimerDaysFishCount(Map<Integer, Long> timerDaysFishCount)
+    {
+        this.timerDaysFishCount = timerDaysFishCount;
+    }
+
+    private static void addFishToTimerDays(Map<Integer, Long> timerDaysFishCount, int timerDays, long numberOfFish)
+    {
+        long fishToAdd = numberOfFish;
+        if (timerDaysFishCount.containsKey(timerDays))
+        {
+            fishToAdd += timerDaysFishCount.get(timerDays);
+        }
+        timerDaysFishCount.put(timerDays, fishToAdd);
     }
 
     void moveToNextDay()
     {
-        lanternFishList.forEach(LanternFish::decreaseTimer);
-        List<LanternFish> lanternFishListCopy = new ArrayList<>(lanternFishList);
-        Stream<LanternFish> hasExpiredTimers = lanternFishListCopy.stream().filter(LanternFish::hasTimerExpired);
-        hasExpiredTimers.forEach(f -> {
-            f.resetTimer();
-            lanternFishList.add(new LanternFish());
-        });
+        Set<Integer> fishGroups = timerDaysFishCount.keySet();
+        Map<Integer, Long> nextTimerDaysFishCount = new HashMap<>();
+        for (Integer timerDaysLeft : fishGroups)
+        {
+            if (timerDaysLeft > 0)
+            {
+                addFishToTimerDays(nextTimerDaysFishCount, timerDaysLeft - 1, timerDaysFishCount.get(timerDaysLeft));
+            }
+        }
+
+        if (timerDaysFishCount.containsKey(0))
+        {
+            addFishToTimerDays(nextTimerDaysFishCount, FISH_RESET_TIMER_DAYS, timerDaysFishCount.get(0));
+            addFishToTimerDays(nextTimerDaysFishCount, NEW_FISH_TIMER_DAYS, timerDaysFishCount.get(0));
+        }
+
+        setNewTimerDaysFishCount(nextTimerDaysFishCount);
     }
 
     long getNumberOfFishes()
     {
-        return lanternFishList.size();
+        return timerDaysFishCount.values().stream().mapToLong(Long::longValue).sum();
     }
 
-    @Override
-    public String toString()
+    long getNumberOfFishes(int timerDays)
     {
-        return String.join(",", lanternFishList.stream().map(LanternFish::toString).toList());
+        return timerDaysFishCount.get(timerDays);
     }
 }
