@@ -2,7 +2,9 @@ package aoc2020.day7;
 
 import lib.Challenge;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Day7_HandyHaversacks extends Challenge {
@@ -39,12 +41,14 @@ public class Day7_HandyHaversacks extends Challenge {
     {
         Set<String> containingBags = new HashSet<>();
         bagRules.getContainingBags("shiny gold", containingBags);
-        System.out.println("Number of bags that contain at least 1 shiny bag: " + containingBags.size());
+        System.out.println("Number of bags that contain at least 1 shiny gold bag: " + containingBags.size());
     }
 
     @Override
     public void doTwoStarSolution()
     {
-
+        Map<String, Integer> containedBags = new HashMap<>();
+        bagRules.getContainedBags("shiny gold", 1, containedBags);
+        System.out.println("Number of bags inside shiny gold bag: " + containedBags.values().stream().mapToInt(Integer::intValue).sum());
     }
 }

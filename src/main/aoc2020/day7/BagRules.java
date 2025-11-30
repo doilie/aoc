@@ -58,4 +58,19 @@ public class BagRules
             }
         }
     }
+
+    void getContainedBags(String bagType, int factor, Map<String, Integer> containedBags)
+    {
+        Map<String, Integer> bagContents = bagRuleMap.get(bagType);
+        for (String bagContentsTypeKey : bagContents.keySet())
+        {
+            int bagContentsTypeQty = bagContents.get(bagContentsTypeKey);
+            if (!containedBags.containsKey(bagContentsTypeKey))
+            {
+                containedBags.put(bagContentsTypeKey, 0);
+            }
+            containedBags.put(bagContentsTypeKey, containedBags.get(bagContentsTypeKey) + factor * bagContentsTypeQty);
+            getContainedBags(bagContentsTypeKey, factor * bagContentsTypeQty, containedBags);
+        }
+    }
 }
