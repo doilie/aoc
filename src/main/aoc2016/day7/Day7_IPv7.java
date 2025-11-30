@@ -42,7 +42,7 @@ public class Day7_IPv7 extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        System.out.println("Number of IPs supporting SSL: " + iPv7AddressList.stream().filter(IPv7Address::isSSL).toList().size());
     }
 
 }

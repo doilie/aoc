@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IPv7AddressTest
 {
-    private static Stream<Arguments> provideAddress()
+    private static Stream<Arguments> provideAddressForTLS()
     {
         return Stream.of(
                 Arguments.of("abba[mnop]qrst", List.of("abba", "qrst"), List.of("mnop"), true),
@@ -23,8 +23,18 @@ public class IPv7AddressTest
         );
     }
 
+    private static Stream<Arguments> provideAddressForSSL()
+    {
+        return Stream.of(
+                Arguments.of("aba[bab]xyz", true),
+                Arguments.of("xyx[xyx]xyx", false),
+                Arguments.of("aaa[kek]eke", true),
+                Arguments.of("zazbz[bzb]cdb", true)
+        );
+    }
+
     @ParameterizedTest
-    @MethodSource("provideAddress")
+    @MethodSource("provideAddressForTLS")
     void testIsTLS(String input, List<String> stringsOutsideBrackets, List<String> stringsInsideBrackets, boolean expectedTls)
     {
         IPv7Address address = new IPv7Address(input);
@@ -35,5 +45,14 @@ public class IPv7AddressTest
             assertTrue(address.getStringsInsideBrackets().contains(stringInsideBrackets));
         }
         assertEquals(expectedTls, address.isTLS());
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideAddressForSSL")
+    void testIsSSL(String input, boolean expectedTls)
+    {
+        IPv7Address address = new IPv7Address(input);
+        assertEquals(expectedTls, address.isSSL());
     }
 }

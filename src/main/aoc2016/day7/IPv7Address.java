@@ -6,6 +6,7 @@ import java.util.List;
 public class IPv7Address
 {
     private static final int ABBA_SIZE = 4;
+    private static final int ABA_SIZE = 3;
 
     private final List<String> stringsOutsideBrackets = new ArrayList<>();
     private final List<String> stringsInsideBrackets = new ArrayList<>();
@@ -41,14 +42,14 @@ public class IPv7Address
     {
         for (String stringInsideBracket : stringsInsideBrackets)
         {
-            if (hasAbbaString(stringInsideBracket))
+            if (!getPalindromeStrings(stringInsideBracket, ABBA_SIZE).isEmpty())
             {
                 return false;
             }
         }
         for (String stringOutsideBracket : stringsOutsideBrackets)
         {
-            if (hasAbbaString(stringOutsideBracket))
+            if (!getPalindromeStrings(stringOutsideBracket, ABBA_SIZE).isEmpty())
             {
                 return true;
             }
@@ -56,28 +57,67 @@ public class IPv7Address
         return false;
     }
 
-    private static boolean hasAbbaString(String stringToCheck)
+    boolean isSSL()
     {
-        for (int i = 0; i <= stringToCheck.length() - ABBA_SIZE; i++)
+        List<String> abaFound = new ArrayList<>();
+        for (String stringOutsideBracket : stringsOutsideBrackets)
         {
-            if (isAbbaString(stringToCheck.substring(i, i + ABBA_SIZE)))
+            abaFound.addAll(getPalindromeStrings(stringOutsideBracket, ABA_SIZE));
+        }
+        List<String> babList = abaFound.stream().map(IPv7Address::reverseLetters).toList();
+        for (String stringInsideBracket : stringsInsideBrackets)
+        {
+            for (String bab : babList)
             {
-                return true;
+                if (stringInsideBracket.contains(bab))
+                {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
-    private static boolean isAbbaString(String stringToCheck)
+    private static List<String> getPalindromeStrings(String stringToCheck, int stringWindow)
     {
-        if (stringToCheck.length() == ABBA_SIZE)
+        List<String> palindromeStrings = new ArrayList<>();
+        for (int i = 0; i <= stringToCheck.length() - stringWindow; i++)
         {
-            if (stringToCheck.charAt((ABBA_SIZE / 2) - 1) != stringToCheck.charAt((ABBA_SIZE / 2) - 2))
+            String substring = stringToCheck.substring(i, i + stringWindow);
+            if (isPalindromeString(substring, stringWindow))
+            {
+                palindromeStrings.add(substring);
+            }
+        }
+        return palindromeStrings;
+    }
+
+    private static boolean isPalindromeString(String stringToCheck, int stringWindow)
+    {
+        if (stringToCheck.length() == stringWindow)
+        {
+            if (stringWindow % 2 == 1)
+            {
+                stringWindow++;
+            }
+            if (stringToCheck.charAt((stringWindow / 2) - 1) != stringToCheck.charAt((stringWindow / 2) - 2))
             {
                 StringBuilder sb = new StringBuilder(stringToCheck);
                 return sb.reverse().toString().equals(stringToCheck);
             }
         }
         return false;
+    }
+
+    private static String reverseLetters(String stringToReverse)
+    {
+        if (stringToReverse.length() == ABA_SIZE)
+        {
+            return String.valueOf(stringToReverse.charAt(1)) +
+                    stringToReverse.charAt(0) +
+                    stringToReverse.charAt(1);
+        }
+        return stringToReverse;
     }
 }
