@@ -17,29 +17,30 @@ public class GroupCustomsDeclarationTest
                         abcx
                         abcy
                         abcz
-                        """, 6),
-                Arguments.of("abc", 3),
+                        """, 6, 3),
+                Arguments.of("abc", 3, 3),
                 Arguments.of("""
                         a
                         b
-                        c""", 3),
+                        c""", 3, 0),
                 Arguments.of("""
                         ab
-                        ac""", 3),
+                        ac""", 3, 1),
                 Arguments.of("""
                         a
                         a
                         a
-                        a""", 1),
-                Arguments.of("b", 1)
+                        a""", 1, 1),
+                Arguments.of("b", 1, 1)
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideInput")
-    void testGetYesAnswersCount(String input, int expected)
+    void testGetYesAnswersCount(String input, int expectedYesAnswers, int expectedCommonYesAnswers)
     {
         GroupCustomsDeclaration groupCustomsDeclaration = new GroupCustomsDeclaration(input);
-        assertEquals(expected, groupCustomsDeclaration.getYesAnswers());
+        assertEquals(expectedYesAnswers, groupCustomsDeclaration.getYesAnswers());
+        assertEquals(expectedCommonYesAnswers, groupCustomsDeclaration.getCommonYesAnswers());
     }
 }

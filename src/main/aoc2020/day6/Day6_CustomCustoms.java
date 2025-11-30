@@ -40,6 +40,6 @@ public class Day6_CustomCustoms extends Challenge {
     @Override
     public void doTwoStarSolution()
     {
-
+        System.out.println("Sum of common yes answers: " + groupCustomsDeclarations.stream().map(GroupCustomsDeclaration::getCommonYesAnswers).mapToInt(Integer::intValue).sum());
     }
 }

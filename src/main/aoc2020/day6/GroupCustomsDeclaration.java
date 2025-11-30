@@ -6,6 +6,7 @@ import java.util.Map;
 public class GroupCustomsDeclaration
 {
     private final Map<Character, Integer> yesAnswersCount = new HashMap<>();
+    private int numberOfGroupMembers = 0;
 
     GroupCustomsDeclaration(String groupAnswers)
     {
@@ -17,14 +18,27 @@ public class GroupCustomsDeclaration
                 char currChar = answerPerPerson.charAt(i);
                 if (currChar != '\r')
                 {
-                    yesAnswersCount.put(currChar, yesAnswersCount.getOrDefault(currChar, 1));
+                    if (!yesAnswersCount.containsKey(currChar))
+                    {
+                        yesAnswersCount.put(currChar, 1);
+                    }
+                    else
+                    {
+                        yesAnswersCount.put(currChar, yesAnswersCount.get(currChar) + 1);
+                    }
                 }
             }
+            numberOfGroupMembers++;
         }
     }
 
     int getYesAnswers()
     {
         return yesAnswersCount.size();
+    }
+
+    int getCommonYesAnswers()
+    {
+        return yesAnswersCount.values().stream().filter(x -> x == numberOfGroupMembers).toList().size();
     }
 }
