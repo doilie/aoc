@@ -48,4 +48,10 @@ public class BitwiseCircuit
             return id + ": not found";
         }
     }
+
+    void setResult(String id, int result)
+    {
+        Optional<BitwiseLogicGateOperation> bitwiseLogicGateOperation = bitwiseLogicGateOperationSet.stream().filter(b -> b.getId().equals(id)).findFirst();
+        bitwiseLogicGateOperation.ifPresent(logicGateOperation -> logicGateOperation.setResult(result));
+    }
 }

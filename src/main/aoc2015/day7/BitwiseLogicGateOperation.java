@@ -94,6 +94,11 @@ public class BitwiseLogicGateOperation
         return result;
     }
 
+    void setResult(int result)
+    {
+        this.result = result;
+    }
+
     void performOperation()
     {
         if (!hasResult())
@@ -132,15 +137,13 @@ public class BitwiseLogicGateOperation
 
     @Override
     public String toString() {
-        String stringRes = id + ": ";
         if (hasResult())
         {
-            stringRes += result;
+            return String.valueOf(result);
         }
         else
         {
-            stringRes += op + "," + op1Id + "(" + op1 + ")," + op2Id + "(" + op2 + ")";
+            return op + "," + op1Id + "(" + op1 + ")," + op2Id + "(" + op2 + ")";
         }
-        return stringRes;
     }
 }

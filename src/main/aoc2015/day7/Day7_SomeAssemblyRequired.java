@@ -23,16 +23,22 @@ public class Day7_SomeAssemblyRequired extends Challenge
 
     }
 
+    private int initialAnswer;
+
     @Override
     public void doOneStarSolution() {
         BitwiseCircuit bitwiseCircuit = new BitwiseCircuit(this.getFileContents().split("\\n"));
         bitwiseCircuit.runCircuit();
-        System.out.println("Signal provided to wire " + bitwiseCircuit.getResult("a"));
+        initialAnswer = Integer.parseInt(bitwiseCircuit.getResult("a"));
+        System.out.println("Signal provided to wire a:" + initialAnswer);
     }
 
     @Override
     public void doTwoStarSolution() {
-
+        BitwiseCircuit bitwiseCircuit = new BitwiseCircuit(this.getFileContents().split("\\n"));
+        bitwiseCircuit.setResult("b", initialAnswer);
+        bitwiseCircuit.runCircuit();
+        System.out.println("New signal provided to wire a:" + bitwiseCircuit.getResult("a"));
     }
 
 }
