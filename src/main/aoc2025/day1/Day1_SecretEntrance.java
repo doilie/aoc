@@ -41,7 +41,8 @@ public class Day1_SecretEntrance extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        SafeDial safeDial = new SafeDial(50);
+        System.out.println("Password considering 0 passes : " + safeDial.getPassword(this.getFileContents().split("\\n")));
     }
 
 }
