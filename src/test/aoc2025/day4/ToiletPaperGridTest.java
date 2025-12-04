@@ -31,7 +31,24 @@ public class ToiletPaperGridTest {
                 .@@@@@@@@.
                 @.@.@@@.@.
                 """);
-        assertEquals(13, toiletPaperGrid.getToiletPaperWithLessThanNumAdjacent(4).size());
+        assertEquals(13, toiletPaperGrid.getToiletPaperByForklift().size());
     }
 
+    @Test
+    public void testGetToiletPaperUntilLimit()
+    {
+        ToiletPaperGrid toiletPaperGrid = new ToiletPaperGrid("""
+                ..@@.@@@@.
+                @@@.@.@.@@
+                @@@@@.@.@@
+                @.@@@@..@.
+                @@.@@@@.@@
+                .@@@@@@@.@
+                .@.@.@.@@@
+                @.@@@.@@@@
+                .@@@@@@@@.
+                @.@.@@@.@.
+                """);
+        assertEquals(43, toiletPaperGrid.getToiletPaperUntilLimit().size());
+    }
 }

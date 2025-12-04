@@ -46,9 +46,10 @@ public class ToiletPaperGrid
         }
     }
 
-    static final char TOILET_PAPER = '@';
+    private static final char TOILET_PAPER = '@';
+    private static final int FORKLIFT_LIMIT = 4;
 
-    private final Set<String> toiletPaperCoordinates = new HashSet<>();
+    private Set<String> toiletPaperCoordinates = new HashSet<>();
 
     ToiletPaperGrid(String input)
     {
@@ -69,12 +70,29 @@ public class ToiletPaperGrid
         }
     }
 
-    Set<String> getToiletPaperWithLessThanNumAdjacent(int count)
+    Set<String> getToiletPaperUntilLimit()
+    {
+        Set<String> collectedToiletPapers = new HashSet<>();
+        Set<String> toiletPapersRemoved;
+
+        do {
+            Set<String> toiletPaperCoordinatesCopy = new HashSet<>(toiletPaperCoordinates);
+            toiletPapersRemoved = getToiletPaperByForklift();
+            collectedToiletPapers.addAll(toiletPapersRemoved);
+            System.out.println(toiletPapersRemoved.size());
+            toiletPaperCoordinatesCopy.removeAll(toiletPapersRemoved);
+            toiletPaperCoordinates = toiletPaperCoordinatesCopy;
+        } while (!toiletPapersRemoved.isEmpty());
+
+        return collectedToiletPapers;
+    }
+
+    Set<String> getToiletPaperByForklift()
     {
         Set<String> result = new HashSet<>();
         for (String toiletPaperCoordinate : toiletPaperCoordinates)
         {
-            if (getToiletPaperAroundCoordinate(toiletPaperCoordinate).size() < count)
+            if (getToiletPaperAroundCoordinate(toiletPaperCoordinate).size() < FORKLIFT_LIMIT)
             {
                 result.add(toiletPaperCoordinate);
             }

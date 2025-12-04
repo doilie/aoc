@@ -24,12 +24,13 @@ public class Day4_PrintingDepartment extends Challenge {
     @Override
     public void doOneStarSolution() {
         ToiletPaperGrid toiletPaperGrid = new ToiletPaperGrid(this.getFileContents());
-        System.out.println("Rolls of paper that can be accessed by forklift: " + toiletPaperGrid.getToiletPaperWithLessThanNumAdjacent(4).size());
+        System.out.println("Rolls of paper that can be accessed by forklift for 1st time: " + toiletPaperGrid.getToiletPaperByForklift().size());
     }
 
     @Override
     public void doTwoStarSolution() {
-
+        ToiletPaperGrid toiletPaperGrid = new ToiletPaperGrid(this.getFileContents());
+        System.out.println("Rolls of paper that can be accessed by forklift: " + toiletPaperGrid.getToiletPaperUntilLimit().size());
     }
 
 }
