@@ -35,12 +35,14 @@ public class Day3_Lobby extends Challenge {
 
     @Override
     public void doOneStarSolution() {
-        System.out.println("Total output joltage: " + batteryBanks.stream().map(BatteryBank::getLargestPossibleJoltage).mapToInt(Integer::intValue).sum());
+        batteryBanks.forEach(batteryBank -> {batteryBank.setNumberOfBatteriesOn(2);});
+        System.out.println("Total output joltage for 2 batteries: " + batteryBanks.stream().map(BatteryBank::getLargestPossibleJoltage).mapToLong(Long::longValue).sum());
     }
 
     @Override
     public void doTwoStarSolution() {
-
+        batteryBanks.forEach(batteryBank -> {batteryBank.setNumberOfBatteriesOn(12);});
+        System.out.println("Total output joltage for 12 batteries: " + batteryBanks.stream().map(BatteryBank::getLargestPossibleJoltage).mapToLong(Long::longValue).sum());
     }
 
 }
