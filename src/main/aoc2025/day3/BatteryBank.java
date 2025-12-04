@@ -17,11 +17,6 @@ public class BatteryBank
         this.numberOfBatteries = numberOfBatteries;
     }
 
-    int getNumberOfBatteries()
-    {
-        return numberOfBatteries;
-    }
-
     long getLargestPossibleJoltage()
     {
         long currMax = 0;
