@@ -9,40 +9,27 @@ public class ToiletPaperGrid
 {
     private static class Coordinate
     {
-        int x;
-        int y;
-
-        Coordinate(int x, int y)
+        static List<String> getSurroundingCoordinates(String referenceCoordinate)
         {
-            this.x = x;
-            this.y = y;
-        }
+            String[] coordinates = referenceCoordinate.split(",");
+            int x = Integer.parseInt(coordinates[0]);
+            int y = Integer.parseInt(coordinates[1]);
 
-        Coordinate(String coordinate)
-        {
-            String[] coordinates = coordinate.split(",");
-            this.x = Integer.parseInt(coordinates[0]);
-            this.y = Integer.parseInt(coordinates[1]);
-        }
-
-        List<String> getSurroundingCoordinates()
-        {
             return List.of(
-                    new Coordinate(this.x - 1, this.y - 1).toString(),
-                    new Coordinate(this.x, this.y - 1).toString(),
-                    new Coordinate(this.x + 1, this.y - 1).toString(),
-                    new Coordinate(this.x - 1, this.y).toString(),
-                    new Coordinate(this.x + 1, this.y).toString(),
-                    new Coordinate(this.x - 1, this.y + 1).toString(),
-                    new Coordinate(this.x, this.y + 1).toString(),
-                    new Coordinate(this.x + 1, this.y + 1).toString()
+                    getCoordinateString(x - 1, y - 1),
+                    getCoordinateString(x, y - 1),
+                    getCoordinateString(x + 1, y - 1),
+                    getCoordinateString(x - 1, y),
+                    getCoordinateString(x + 1, y),
+                    getCoordinateString(x - 1, y + 1),
+                    getCoordinateString(x, y + 1),
+                    getCoordinateString(x + 1, y + 1)
             );
         }
 
-        @Override
-        public String toString()
+        static String getCoordinateString(int x, int y)
         {
-            return x + "," + y;
+            return String.format("%d,%d", x, y);
         }
     }
 
@@ -63,7 +50,7 @@ public class ToiletPaperGrid
                 {
                     if (line.charAt(x) == TOILET_PAPER)
                     {
-                        toiletPaperCoordinates.add(new Coordinate(x, y).toString());
+                        toiletPaperCoordinates.add(Coordinate.getCoordinateString(x, y));
                     }
                 }
             }
@@ -79,7 +66,7 @@ public class ToiletPaperGrid
             Set<String> toiletPaperCoordinatesCopy = new HashSet<>(toiletPaperCoordinates);
             toiletPapersRemoved = getToiletPaperByForklift();
             collectedToiletPapers.addAll(toiletPapersRemoved);
-            System.out.println(toiletPapersRemoved.size());
+            System.out.println("Collected toilet papers: " + toiletPapersRemoved.size());
             toiletPaperCoordinatesCopy.removeAll(toiletPapersRemoved);
             toiletPaperCoordinates = toiletPaperCoordinatesCopy;
         } while (!toiletPapersRemoved.isEmpty());
@@ -102,8 +89,7 @@ public class ToiletPaperGrid
 
     Set<String> getToiletPaperAroundCoordinate(String coordinate)
     {
-        Coordinate toiletPaperCoordinate = new Coordinate(coordinate);
-        List<String> surroundingCoordinates = toiletPaperCoordinate.getSurroundingCoordinates();
+        List<String> surroundingCoordinates = Coordinate.getSurroundingCoordinates(coordinate);
         return toiletPaperCoordinates.stream().filter(surroundingCoordinates::contains).collect(Collectors.toSet());
     }
 }
