@@ -40,8 +40,6 @@ public class Operation {
 
     List<String> getCephalopodNumbers()
     {
-        int columnSize = numbers.getFirst().length();
-
         Map<Integer, List<String>> prepMap = new HashMap<>();
         for (String num : numbers)
         {

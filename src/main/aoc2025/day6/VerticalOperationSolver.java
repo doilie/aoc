@@ -22,12 +22,9 @@ public class VerticalOperationSolver
         }
         for (String line : lines)
         {
-            if (!line.isEmpty())
+            if (!line.isEmpty() && !line.trim().startsWith(Operation.ADD) && !line.trim().startsWith(Operation.MULTIPLY))
             {
-                if (!line.trim().startsWith(Operation.ADD) && !line.trim().startsWith(Operation.MULTIPLY))
-                {
-                    addNumbersLine(line);
-                }
+                addNumbersLine(line);
             }
         }
     }
