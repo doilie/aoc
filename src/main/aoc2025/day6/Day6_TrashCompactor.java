@@ -28,7 +28,8 @@ public class Day6_TrashCompactor extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        VerticalOperationSolver verticalOperationSolver = new VerticalOperationSolver(this.getFileContents());
+        System.out.println("Grand total: " + verticalOperationSolver.solveCephalopodally());
     }
 
 }

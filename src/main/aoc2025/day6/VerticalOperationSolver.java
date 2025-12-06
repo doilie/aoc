@@ -1,6 +1,5 @@
 package aoc2025.day6;
 
-import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,31 +10,66 @@ public class VerticalOperationSolver
     VerticalOperationSolver(String input)
     {
         String[] lines = input.split("\\n");
-        for (String line : lines) {
-            if (!line.isEmpty()) {
-                if (line.trim().startsWith(Operation.ADD) || line.trim().startsWith(Operation.MULTIPLY)) {
-                    addOperationLine(line);
-                } else {
+
+        for (int i = lines.length - 1; i > 0; i--)
+        {
+            if (!lines[i].isEmpty() && lines[i].trim().startsWith(Operation.ADD) || lines[i].trim().startsWith(Operation.MULTIPLY))
+            {
+                setColumnLengths(lines[i]);
+                addOperationLine(lines[i]);
+                break;
+            }
+        }
+        for (String line : lines)
+        {
+            if (!line.isEmpty())
+            {
+                if (!line.trim().startsWith(Operation.ADD) && !line.trim().startsWith(Operation.MULTIPLY))
+                {
                     addNumbersLine(line);
                 }
             }
         }
     }
 
+    private void setColumnLengths(String line)
+    {
+        int spaceCount = 0;
+        int columnCount = 0;
+        for (int i = 0; i < line.length(); i++)
+        {
+            char currChar = line.charAt(i);
+            if (currChar == Operation.ADD.charAt(0) || currChar == Operation.MULTIPLY.charAt(0) || currChar == '\n' || currChar == '\r')
+            {
+                if (i != 0)
+                {
+                    Operation operation = new Operation(spaceCount);
+                    operationMap.put(columnCount, operation);
+                    columnCount++;
+                    spaceCount = 0;
+                }
+            }
+            else if (currChar == ' '){
+                spaceCount++;
+            }
+        }
+        if (spaceCount > 0)
+        {
+            Operation operation = new Operation(spaceCount);
+            operationMap.put(columnCount, operation);
+        }
+    }
+
     private void addNumbersLine(String line)
     {
-        String[] numbersStr = line.trim().split("\\s+");
-        for (int i = 0; i < numbersStr.length; i++)
+        int currIdx = 0;
+        for (int i = 0; i < operationMap.size(); i++)
         {
-            if (!numbersStr[i].isEmpty())
-            {
-                if (!operationMap.containsKey(i))
-                {
-                    operationMap.put(i, new Operation());
-                }
-                Operation operation = operationMap.get(i);
-                operation.addNumber(Integer.parseInt(numbersStr[i].trim()));
-            }
+            Operation operation = operationMap.get(i);
+            int columnSize = operation.getColumnSize();
+            String numToAdd = line.substring(currIdx, Math.min(currIdx + columnSize, line.length()));
+            operationMap.get(i).addNumber(numToAdd);
+            currIdx = currIdx + columnSize + 1;
         }
     }
 
@@ -44,17 +78,9 @@ public class VerticalOperationSolver
         String[] operationStr = line.trim().split("\\s+");
         for (int i = 0; i < operationStr.length; i++)
         {
-            if (!operationStr[i].isEmpty())
+            if (operationMap.containsKey(i))
             {
-                if (operationMap.containsKey(i))
-                {
-                    Operation operation = operationMap.get(i);
-                    operation.setOperation(operationStr[i].trim());
-                }
-                else
-                {
-                    throw new InvalidParameterException(operationStr[i]);
-                }
+                operationMap.get(i).setOperation(operationStr[i].trim());
             }
         }
     }
@@ -65,6 +91,16 @@ public class VerticalOperationSolver
         for (Operation operation : operationMap.values())
         {
             result += operation.getResult();
+        }
+        return result;
+    }
+
+    long solveCephalopodally()
+    {
+        long result = 0;
+        for (Operation operation : operationMap.values())
+        {
+            result += operation.getCephalopodResult();
         }
         return result;
     }
