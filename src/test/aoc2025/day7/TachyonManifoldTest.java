@@ -58,4 +58,12 @@ public class TachyonManifoldTest {
         TachyonManifold tachyonManifold = getTachyonManifoldSample();
         assertEquals(21, tachyonManifold.splitBeam());
     }
+
+
+    @Test
+    void testCountPaths()
+    {
+        TachyonManifold tachyonManifold = getTachyonManifoldSample();
+        assertEquals(40, tachyonManifold.countPaths());
+    }
 }

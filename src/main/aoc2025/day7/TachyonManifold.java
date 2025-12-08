@@ -1,8 +1,6 @@
 package aoc2025.day7;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class TachyonManifold {
     private static class TachyonCoordinate
@@ -29,6 +27,7 @@ public class TachyonManifold {
     private String startCoordinate;
     private final Set<String> splitterCoordinates = new HashSet<>();
     private int lastSplitterRow;
+    private int maxLength;
 
     TachyonManifold(String input)
     {
@@ -53,6 +52,7 @@ public class TachyonManifold {
     private void findTachyonCoordinates(String input)
     {
         String[] lines = input.split("\\n");
+        maxLength = lines[0].length();
         for (int y = 0; y < lines.length; y++)
         {
             String line = lines[y];
@@ -102,5 +102,50 @@ public class TachyonManifold {
             }
         }
         return splitCount;
+    }
+
+    long countPaths()
+    {
+        return countPaths(startCoordinate, new HashMap<>());
+    }
+
+    private long countPaths(String coordinate, Map<String, Long> index)
+    {
+        int y = TachyonCoordinate.getY(coordinate);
+        int x = TachyonCoordinate.getX(coordinate);
+
+        if (y == lastSplitterRow + 1)
+        {
+            return 1;
+        }
+
+        if (index.containsKey(coordinate))
+        {
+            return index.get(coordinate);
+        }
+
+        if (splitterCoordinates.contains(coordinate))
+        {
+            int left = x - 1;
+            int right = x + 1;
+            long leftCount = 0;
+            long rightCount = 0;
+            if (left >= 0)
+            {
+                leftCount = countPaths(TachyonCoordinate.getCoordinateString(left, y), index);
+                index.put(TachyonCoordinate.getCoordinateString(left, y), leftCount);
+            }
+            if (right < maxLength)
+            {
+                rightCount = countPaths(TachyonCoordinate.getCoordinateString(right, y), index);
+                index.put(TachyonCoordinate.getCoordinateString(right, y), rightCount);
+            }
+            return leftCount + rightCount;
+        }
+        else {
+            long res = countPaths(TachyonCoordinate.getCoordinateString(x, y + 1), index);
+            index.put(TachyonCoordinate.getCoordinateString(x, y + 1), res);
+            return res;
+        }
     }
 }

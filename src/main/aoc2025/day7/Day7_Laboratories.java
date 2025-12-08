@@ -28,7 +28,8 @@ public class Day7_Laboratories extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        TachyonManifold tachyonManifold = new TachyonManifold(this.getFileContents());
+        System.out.println("Number of timelines: " + tachyonManifold.countPaths());
     }
 
 }
