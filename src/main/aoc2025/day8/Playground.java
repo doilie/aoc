@@ -70,6 +70,10 @@ public class Playground {
             }
             tempJunctionBoxes.remove(point1);
             tempJunctionBoxes.remove(point2);
+            if (tempJunctionBoxes.isEmpty())
+            {
+                break;
+            }
         }
 
         for (String tempJunctionBox : tempJunctionBoxes)
@@ -80,5 +84,53 @@ public class Playground {
         }
 
         return circuits.stream().sorted((s1, s2) -> s2.size() - s1.size()).toList();
+    }
+
+    String getCompletingConnection()
+    {
+        List<Set<String>> circuits = new ArrayList<>();
+        List<String> sortedConnections = getSortedConnections();
+        Set<String> tempJunctionBoxes = new HashSet<>(junctionBoxes);
+
+        for (int i = 0; i < sortedConnections.size(); i++)
+        {
+            String sortedConnection = sortedConnections.get(i);
+            String[] points = sortedConnection.split("-");
+            String point1 = points[0];
+            String point2 = points[1];
+
+            Set<String> point1Circuit = circuits.stream().filter(s -> s.contains(point1)).findFirst().orElse(null);
+            Set<String> point2Circuit = circuits.stream().filter(s -> s.contains(point2)).findFirst().orElse(null);
+            if (point1Circuit == null && point2Circuit == null)
+            {
+                Set<String> newCircuit = new HashSet<>();
+                newCircuit.add(point1);
+                newCircuit.add(point2);
+                circuits.add(newCircuit);
+            }
+            else if (point1Circuit != null && point2Circuit != null && point1Circuit != point2Circuit)
+            {
+                point1Circuit.addAll(point2Circuit);
+                point1Circuit.add(point1);
+                point1Circuit.add(point2);
+                circuits.remove(point2Circuit);
+            }
+            else if (point1Circuit != null && point2Circuit == null)
+            {
+                point1Circuit.add(point2);
+            }
+            else if (point1Circuit == null)
+            {
+                point2Circuit.add(point1);
+            }
+            tempJunctionBoxes.remove(point1);
+            tempJunctionBoxes.remove(point2);
+            if (tempJunctionBoxes.isEmpty())
+            {
+                return sortedConnection;
+            }
+        }
+
+        return "";
     }
 }

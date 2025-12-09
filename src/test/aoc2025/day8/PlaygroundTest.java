@@ -43,4 +43,12 @@ public class PlaygroundTest {
         assertEquals(4, circuits.get(1).size());
         assertEquals(2, circuits.get(2).size());
     }
+
+    @Test
+    void testGetCompletingConnection()
+    {
+        Playground playground = new Playground(getSampleData());
+        String completingConnection = playground.getCompletingConnection();
+        assertEquals("216,146,977-117,168,530", completingConnection);
+    }
 }

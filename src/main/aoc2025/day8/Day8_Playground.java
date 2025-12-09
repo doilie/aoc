@@ -37,7 +37,13 @@ public class Day8_Playground extends Challenge {
 
     @Override
     public void doTwoStarSolution() {
-
+        Playground playground = new Playground(this.getFileContents());
+        String completingConnection = playground.getCompletingConnection();
+        String[] points = completingConnection.split("-");
+        String[] firstPoint = points[0].split(",");
+        String[] secondPoint = points[1].split(",");
+        long completingConnectionXProduct = Long.parseLong(firstPoint[0]) * Long.parseLong(secondPoint[0]);
+        System.out.println("Completing connection x product: " + completingConnectionXProduct);
     }
 
 }
