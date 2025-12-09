@@ -1,7 +1,6 @@
 package aoc2025.day8;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Playground {
     private static final Map<String, Double> connectionDistances = new HashMap<>();
