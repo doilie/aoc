@@ -3,12 +3,14 @@ package aoc2025.day8;
 import java.util.*;
 
 public class Playground {
-    private static final Map<String, Double> connectionDistances = new HashMap<>();
-    private static final Set<String> junctionBoxes = new HashSet<>();
+    private final Set<String> junctionBoxes = new HashSet<>();
+    private final List<String> sortedConnections;
+    private String completingConnection;
 
     Playground(String input)
     {
         String[] lines = input.split("\\n");
+        Map<String, Double> connectionDistances = new HashMap<>();
         for (int i = 0; i < lines.length - 1; i++)
         {
             String point1 = lines[i];
@@ -24,17 +26,12 @@ public class Playground {
                 connectionDistances.put(point1 + "-" + point2, junctionBox1.calculateDistance(junctionBox2));
             }
         }
-    }
-
-    private List<String> getSortedConnections()
-    {
-        return connectionDistances.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue)).map(Map.Entry::getKey).toList();
+        sortedConnections = connectionDistances.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue)).map(Map.Entry::getKey).toList();
     }
 
     List<Set<String>> getCircuits(int rank)
     {
         List<Set<String>> circuits = new ArrayList<>();
-        List<String> sortedConnections = getSortedConnections();
         Set<String> tempJunctionBoxes = new HashSet<>(junctionBoxes);
 
         for (int i = 0; i < rank; i++)
@@ -72,6 +69,7 @@ public class Playground {
             tempJunctionBoxes.remove(point2);
             if (tempJunctionBoxes.isEmpty())
             {
+                completingConnection = sortedConnection;
                 break;
             }
         }
@@ -88,49 +86,7 @@ public class Playground {
 
     String getCompletingConnection()
     {
-        List<Set<String>> circuits = new ArrayList<>();
-        List<String> sortedConnections = getSortedConnections();
-        Set<String> tempJunctionBoxes = new HashSet<>(junctionBoxes);
-
-        for (int i = 0; i < sortedConnections.size(); i++)
-        {
-            String sortedConnection = sortedConnections.get(i);
-            String[] points = sortedConnection.split("-");
-            String point1 = points[0];
-            String point2 = points[1];
-
-            Set<String> point1Circuit = circuits.stream().filter(s -> s.contains(point1)).findFirst().orElse(null);
-            Set<String> point2Circuit = circuits.stream().filter(s -> s.contains(point2)).findFirst().orElse(null);
-            if (point1Circuit == null && point2Circuit == null)
-            {
-                Set<String> newCircuit = new HashSet<>();
-                newCircuit.add(point1);
-                newCircuit.add(point2);
-                circuits.add(newCircuit);
-            }
-            else if (point1Circuit != null && point2Circuit != null && point1Circuit != point2Circuit)
-            {
-                point1Circuit.addAll(point2Circuit);
-                point1Circuit.add(point1);
-                point1Circuit.add(point2);
-                circuits.remove(point2Circuit);
-            }
-            else if (point1Circuit != null && point2Circuit == null)
-            {
-                point1Circuit.add(point2);
-            }
-            else if (point1Circuit == null)
-            {
-                point2Circuit.add(point1);
-            }
-            tempJunctionBoxes.remove(point1);
-            tempJunctionBoxes.remove(point2);
-            if (tempJunctionBoxes.isEmpty())
-            {
-                return sortedConnection;
-            }
-        }
-
-        return "";
+        getCircuits(sortedConnections.size());
+        return completingConnection;
     }
 }
