@@ -5,9 +5,9 @@ import lib.Challenge;
 public class Day7_Laboratories extends Challenge {
     public static void main(String[] args)
     {
-        Day7_Laboratories day6 = new Day7_Laboratories();
-        day6.doOneStarSolution();
-        day6.doTwoStarSolution();
+        Day7_Laboratories day7 = new Day7_Laboratories();
+        day7.doOneStarSolution();
+        day7.doTwoStarSolution();
     }
 
     public Day7_Laboratories() {

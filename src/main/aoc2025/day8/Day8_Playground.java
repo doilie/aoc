@@ -8,9 +8,9 @@ import java.util.Set;
 public class Day8_Playground extends Challenge {
     public static void main(String[] args)
     {
-        Day8_Playground day6 = new Day8_Playground();
-        day6.doOneStarSolution();
-        day6.doTwoStarSolution();
+        Day8_Playground day8 = new Day8_Playground();
+        day8.doOneStarSolution();
+        day8.doTwoStarSolution();
     }
 
     public Day8_Playground() {
