@@ -5,25 +5,26 @@ import java.util.stream.Collectors;
 
 public class Playground {
     private static final Map<String, Double> connectionDistances = new HashMap<>();
-    private static final Set<String> circuits = new HashSet<>();
+    private static final Set<String> junctionBoxes = new HashSet<>();
 
     Playground(String input)
     {
         String[] lines = input.split("\\n");
-        for (int i = 0; i < lines.length; i++)
+        for (int i = 0; i < lines.length - 1; i++)
         {
             String point1 = lines[i];
+            junctionBoxes.add(point1);
             String[] point1Str = point1.split(",");
             JunctionBox junctionBox1 = new JunctionBox(Integer.parseInt(point1Str[0]), Integer.parseInt(point1Str[1]), Integer.parseInt(point1Str[2]));
             for (int j = i + 1; j < lines.length; j++)
             {
                 String point2 = lines[j];
+                junctionBoxes.add(point2);
                 String[] point2Str = point2.split(",");
                 JunctionBox junctionBox2 = new JunctionBox(Integer.parseInt(point2Str[0]), Integer.parseInt(point2Str[1]), Integer.parseInt(point2Str[2]));
                 connectionDistances.put(point1 + "-" + point2, junctionBox1.calculateDistance(junctionBox2));
             }
         }
-        groupJunctionBoxesToCircuits();
     }
 
     private List<String> getSortedConnections()
@@ -31,39 +32,54 @@ public class Playground {
         return connectionDistances.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue)).map(Map.Entry::getKey).toList();
     }
 
-    private void groupJunctionBoxesToCircuits()
+    List<Set<String>> getCircuits(int rank)
     {
+        List<Set<String>> circuits = new ArrayList<>();
         List<String> sortedConnections = getSortedConnections();
-        System.out.println(sortedConnections);
-        for (String connection : sortedConnections) {
-            String[] points = connection.split("-");
+        Set<String> tempJunctionBoxes = new HashSet<>(junctionBoxes);
+
+        for (int i = 0; i < rank; i++)
+        {
+            String sortedConnection = sortedConnections.get(i);
+            String[] points = sortedConnection.split("-");
             String point1 = points[0];
             String point2 = points[1];
-            boolean p1 = false;
-            boolean p2 = false;
-            for (String circuit : circuits) {
-                if (circuit.contains(point1)) {
-                    circuits.add(circuit + "-" + point2);
-                    circuits.remove(circuit);
-                    p2 = true;
-                    break;
-                }
-                if (circuit.contains(point2)) {
-                    circuits.add(circuit + "-" + point1);
-                    circuits.remove(circuit);
-                    p1 = true;
-                    break;
-                }
-            }
-            if (!p1 && !p2)
-            {
-                circuits.add(connection);
-            }
-        }
-    }
 
-    Set<String> getCircuits()
-    {
-        return circuits;
+            Set<String> point1Circuit = circuits.stream().filter(s -> s.contains(point1)).findFirst().orElse(null);
+            Set<String> point2Circuit = circuits.stream().filter(s -> s.contains(point2)).findFirst().orElse(null);
+            if (point1Circuit == null && point2Circuit == null)
+            {
+                Set<String> newCircuit = new HashSet<>();
+                newCircuit.add(point1);
+                newCircuit.add(point2);
+                circuits.add(newCircuit);
+            }
+            else if (point1Circuit != null && point2Circuit != null && point1Circuit != point2Circuit)
+            {
+                point1Circuit.addAll(point2Circuit);
+                point1Circuit.add(point1);
+                point1Circuit.add(point2);
+                circuits.remove(point2Circuit);
+            }
+            else if (point1Circuit != null && point2Circuit == null)
+            {
+                point1Circuit.add(point2);
+            }
+            else if (point1Circuit == null)
+            {
+                point2Circuit.add(point1);
+            }
+            tempJunctionBoxes.remove(point1);
+            tempJunctionBoxes.remove(point2);
+        }
+
+        for (String tempJunctionBox : tempJunctionBoxes)
+        {
+            Set<String> tempCircuit = new HashSet<>();
+            tempCircuit.add(tempJunctionBox);
+            circuits.add(tempCircuit);
+        }
+
+        return circuits.stream().sorted((s1, s2) -> s2.size() - s1.size()).toList();
     }
 }

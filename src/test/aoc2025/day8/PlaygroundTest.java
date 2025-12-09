@@ -3,6 +3,7 @@ package aoc2025.day8;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -36,6 +37,10 @@ public class PlaygroundTest {
     void testGetCircuits()
     {
         Playground playground = new Playground(getSampleData());
-        assertEquals(11, playground.getCircuits().size());
+        List<Set<String>> circuits = playground.getCircuits(10);
+        assertEquals(11, circuits.size());
+        assertEquals(5, circuits.getFirst().size());
+        assertEquals(4, circuits.get(1).size());
+        assertEquals(2, circuits.get(2).size());
     }
 }
